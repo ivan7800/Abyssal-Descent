@@ -1,0 +1,5 @@
+const fs=require('fs'),path=require('path')
+const root=path.resolve(__dirname,'..'), src=path.join(root,'docs'), out=path.join(root,'dist')
+if(!fs.existsSync(path.join(src,'index.html'))) throw new Error('docs/index.html missing')
+fs.rmSync(out,{recursive:true,force:true});fs.cpSync(src,out,{recursive:true})
+console.log(`Static build ready: ${out}`)

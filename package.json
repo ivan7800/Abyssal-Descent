@@ -1,0 +1,36 @@
+{
+  "name": "abyssal-descent",
+  "private": true,
+  "version": "1.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve-static.cjs docs 5173",
+    "build": "node scripts/build-static.cjs",
+    "preview": "node scripts/serve-static.cjs dist 4173",
+    "typecheck": "tsc -b --pretty false",
+    "validate": "node scripts/validate.cjs",
+    "check": "npm run test && npm run static-check && npm run runtime-smoke && npm run build",
+    "balance": "node scripts/balance.cjs",
+    "ui-regression": "node scripts/ui-regression.cjs",
+    "test": "npm run validate && npm run balance && npm run ui-regression",
+    "build:source": "tsc -b && vite build",
+    "static-check": "node scripts/static-check.cjs",
+    "runtime-smoke": "node scripts/standalone-runtime.cjs",
+    "dev:source": "vite --open /source.html"
+  },
+  "dependencies": {
+    "phaser": "3.90.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.12",
+    "@types/react-dom": "19.1.9",
+    "@vitejs/plugin-react": "5.0.2",
+    "typescript": "5.9.2",
+    "vite": "7.1.5"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

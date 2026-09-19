@@ -1,0 +1,154 @@
+import type { ArchetypeId, InventoryItem } from './types'
+
+export type EnemyKind =
+  | 'listener' | 'leech' | 'warden' | 'bent'
+  | 'moth' | 'pilgrim' | 'oracle' | 'husk'
+  | 'mirror_stalker' | 'bell_devourer'
+  | 'salt_knight' | 'choir' | 'abyss_heart' | 'void_saint'
+
+export type EnemyDef = {
+  name: string
+  hp: number
+  min: number
+  max: number
+  defense: number
+  sanityChance: number
+  sanityDamage: number
+  xp: number
+  description: string
+  intent: string
+  boss?: boolean
+  elite?: boolean
+  phases?: number
+}
+
+export const ARCHETYPES: Record<ArchetypeId, {
+  name: string
+  blurb: string
+  hp: number
+  sanity: number
+  weapon: string
+  charm?: string
+  abilityName: string
+  abilityDescription: string
+  passiveName: string
+  passiveDescription: string
+}> = {
+  surveyor: {
+    name: 'Surveyor', blurb: 'Balanced explorer. Reads the dungeon better and strikes with precision.',
+    hp: 24, sanity: 21, weapon: 'surveyor_knife', charm: 'brass_compass',
+    abilityName: 'Measured Strike', abilityDescription: 'A reliable heavy hit that breaks defense.',
+    passiveName: 'Cartographic Instinct', passiveDescription: 'Reveals a wider area while exploring and has an elevated critical chance.',
+  },
+  occultist: {
+    name: 'Occultist', blurb: 'Fragile but lucid. Converts sanity into devastating occult damage.',
+    hp: 20, sanity: 27, weapon: 'ritual_athame', charm: 'glass_eye',
+    abilityName: 'Forbidden Word', abilityDescription: 'Spend sanity to deal high damage and stagger the enemy.',
+    passiveName: 'Thin Veil', passiveDescription: 'Resists a portion of sanity attacks and gains more sanity when focusing.',
+  },
+  veteran: {
+    name: 'Veteran', blurb: 'Tough survivor. Better defense and a brutal counterattack.',
+    hp: 29, sanity: 18, weapon: 'trench_hatchet', charm: 'iron_token',
+    abilityName: 'Hold Fast', abilityDescription: 'Guard heavily and retaliate after the enemy attacks.',
+    passiveName: 'Fieldcraft', passiveDescription: 'Guard is stronger and medical consumables restore 25% more vitality.',
+  },
+}
+
+export const ITEM_DEFS: Record<string, Omit<InventoryItem, 'instanceId'>> = {
+  surveyor_knife: { defId: 'surveyor_knife', name: "Surveyor's Knife", kind: 'weapon', attackBonus: 2, critBonus: .04, description: 'A narrow utility blade marked with depth notches.' },
+  ritual_athame: { defId: 'ritual_athame', name: 'Ritual Athame', kind: 'weapon', attackBonus: 1, maxSanityBonus: 1, description: 'Its edge seems sharpest in peripheral vision.' },
+  trench_hatchet: { defId: 'trench_hatchet', name: 'Trench Hatchet', kind: 'weapon', attackBonus: 3, description: 'Heavy, chipped, dependable.' },
+  bone_sabre: { defId: 'bone_sabre', name: 'Bone Sabre', kind: 'weapon', attackBonus: 4, critBonus: .14, description: 'Light, brittle-looking and unnervingly eager to find joints.' },
+  coral_blade: { defId: 'coral_blade', name: 'Coral Blade', kind: 'weapon', attackBonus: 5, critBonus: .06, description: 'A serrated relic grown rather than forged.' },
+  cantor_needle: { defId: 'cantor_needle', name: 'Cantor Needle', kind: 'weapon', attackBonus: 5, critBonus: .18, description: 'A ritual spike tuned to the buried city’s resonant stone.' },
+  bell_hammer: { defId: 'bell_hammer', name: 'Bell Hammer', kind: 'weapon', attackBonus: 7, description: 'Bronze weight. Every blow leaves a note hanging in the dark.' },
+  dream_sickle: { defId: 'dream_sickle', name: 'Dream Sickle', kind: 'weapon', attackBonus: 7, critBonus: .13, maxSanityBonus: 2, description: 'A curved edge that feels less real when you look directly at it.' },
+  void_lance: { defId: 'void_lance', name: 'Void Lance', kind: 'weapon', attackBonus: 9, critBonus: .05, description: 'Impossible geometry hardened into a weapon.' },
+  star_cutter: { defId: 'star_cutter', name: 'Star Cutter', kind: 'weapon', attackBonus: 11, critBonus: .10, unique: true, description: 'A thin line of darkness that parts matter a moment before it touches.' },
+
+  brass_compass: { defId: 'brass_compass', name: 'Brass Compass', kind: 'charm', maxSanityBonus: 2, defenseBonus: 1, sanityResist: .08, description: 'It never points north, but often points home.' },
+  glass_eye: { defId: 'glass_eye', name: 'Glass Eye', kind: 'charm', maxSanityBonus: 7, sanityResist: .05, description: 'Warm whenever something unseen is watching.' },
+  iron_token: { defId: 'iron_token', name: 'Iron Token', kind: 'charm', defenseBonus: 2, description: 'A military token filed blank.' },
+  salt_charm: { defId: 'salt_charm', name: 'Salt Charm', kind: 'charm', maxSanityBonus: 4, defenseBonus: 1, sanityResist: .12, description: 'Black salt sewn inside waxed cloth.' },
+  choir_mask: { defId: 'choir_mask', name: 'Choir Mask', kind: 'charm', maxSanityBonus: 5, defenseBonus: 2, description: 'A porcelain face with no mouth.' },
+  mirror_shard: { defId: 'mirror_shard', name: 'Mirror Shard', kind: 'charm', maxSanityBonus: 3, critBonus: .12, sanityResist: .15, unique: true, description: 'Your reflection is always a fraction of a second late.' },
+  saint_bone: { defId: 'saint_bone', name: 'Saint Bone', kind: 'charm', defenseBonus: 3, healOnKill: 2, unique: true, description: 'A polished phalanx engraved with a map of nowhere.' },
+
+  field_dressing: { defId: 'field_dressing', name: 'Field Dressing', kind: 'consumable', heal: 8, description: 'Stops blood. Does nothing for questions.' },
+  strong_dressing: { defId: 'strong_dressing', name: 'Surgical Pack', kind: 'consumable', heal: 14, description: 'Clean gauze and a vial of coagulant.' },
+  lucid_tonic: { defId: 'lucid_tonic', name: 'Lucid Tonic', kind: 'consumable', restoreSanity: 7, description: 'Bitter enough to make the world feel briefly certain.' },
+  white_tincture: { defId: 'white_tincture', name: 'White Tincture', kind: 'consumable', heal: 5, restoreSanity: 5, description: 'A milky suspension labelled only with a date.' },
+  black_draught: { defId: 'black_draught', name: 'Black Draught', kind: 'consumable', heal: 10, restoreSanity: -3, description: 'Closes wounds quickly. Leaves a memory that is not yours.' },
+
+  salt_seal: { defId: 'salt_seal', name: 'Salt Seal', kind: 'quest', description: 'A ribbed seal cut from the first Warden.' },
+  city_canticle: { defId: 'city_canticle', name: 'City Canticle', kind: 'quest', description: 'Two verses of a song the buried city still remembers.' },
+  black_star: { defId: 'black_star', name: 'Black Star', kind: 'quest', description: 'A fragment of impossible night. It vibrates near the abyss.' },
+  abyss_key: { defId: 'abyss_key', name: 'Abyss Key', kind: 'quest', description: 'Three impossible angles held together by a promise.' },
+}
+
+export const ENEMY_DEFS: Record<EnemyKind, EnemyDef> = {
+  listener: { name: 'Pale Listener', hp: 12, min: 1, max: 4, defense: 0, sanityChance: .42, sanityDamage: 1, xp: 7, description: 'A jointless silhouette that seems to hear your thoughts.', intent: 'scratches at the edge of your mind' },
+  leech: { name: 'Glass Leech', hp: 9, min: 1, max: 3, defense: 0, sanityChance: .60, sanityDamage: 1, xp: 6, description: 'A translucent thing filled with borrowed reflections.', intent: 'coils for a sudden lunge' },
+  warden: { name: 'Salt Warden', hp: 18, min: 2, max: 5, defense: 2, sanityChance: .25, sanityDamage: 1, xp: 12, description: 'A crusted sentinel carrying a key fused into its ribs.', intent: 'raises its calcified shield' },
+  bent: { name: 'The Bent One', hp: 24, min: 3, max: 6, defense: 1, sanityChance: .42, sanityDamage: 2, xp: 15, description: 'Too tall for the corridor, yet somehow standing upright.', intent: 'leans closer without taking a step' },
+  moth: { name: 'Ash Moth', hp: 10, min: 2, max: 4, defense: 0, sanityChance: .55, sanityDamage: 1, xp: 8, description: 'A human-sized moth shedding warm grey ash.', intent: 'beats its wings into a choking cloud' },
+  pilgrim: { name: 'Drowned Pilgrim', hp: 20, min: 2, max: 6, defense: 2, sanityChance: .30, sanityDamage: 1, xp: 13, description: 'Water runs from a robe that has been dry for centuries.', intent: 'whispers a prayer backwards' },
+  oracle: { name: 'Blind Oracle', hp: 17, min: 2, max: 5, defense: 1, sanityChance: .70, sanityDamage: 2, xp: 16, description: 'Its sealed face turns toward choices you have not made yet.', intent: 'speaks your next mistake aloud' },
+  husk: { name: 'Starved Husk', hp: 15, min: 3, max: 7, defense: 0, sanityChance: .18, sanityDamage: 1, xp: 11, description: 'A survivor-shaped absence moving on instinct.', intent: 'tenses to rush you' },
+  mirror_stalker: { name: 'Mirror Stalker', hp: 34, min: 3, max: 6, defense: 1, sanityChance: .58, sanityDamage: 2, xp: 34, description: 'It wears your silhouette and attacks a heartbeat before you move.', intent: 'copies your stance', elite: true },
+  bell_devourer: { name: 'Bell Devourer', hp: 38, min: 4, max: 7, defense: 2, sanityChance: .45, sanityDamage: 2, xp: 38, description: 'A mouth built around a bronze bell, feeding on resonance.', intent: 'swallows the room sound by sound', elite: true },
+  salt_knight: { name: 'The Salt Knight', hp: 34, min: 2, max: 5, defense: 2, sanityChance: .36, sanityDamage: 2, xp: 45, description: 'The first guardian, armored in centuries of mineral bloom.', intent: 'drags a bell-blade across the stone', boss: true, phases: 2 },
+  choir: { name: 'Choir Beneath', hp: 48, min: 3, max: 6, defense: 2, sanityChance: .65, sanityDamage: 2, xp: 60, description: 'Many throats sharing one body and one impossible note.', intent: 'draws breath through a dozen mouths', boss: true, phases: 2 },
+  abyss_heart: { name: 'Heart of the Abyss', hp: 62, min: 3, max: 7, defense: 2, sanityChance: .72, sanityDamage: 3, xp: 90, description: 'Not a creature. A door that learned how to beat.', intent: 'folds the corridor toward itself', boss: true, phases: 3 },
+  void_saint: { name: 'The Void Saint', hp: 82, min: 4, max: 8, defense: 3, sanityChance: .68, sanityDamage: 3, xp: 140, description: 'A human shape wrapped around an absence, crowned by a star that refuses perspective.', intent: 'raises one hand and the chamber forgets gravity', boss: true, phases: 3 },
+}
+
+export const FLOOR_DATA = {
+  1: {
+    name: 'I · The Forgotten Cells',
+    objective: 'Find and defeat the Salt Warden. Take its seal to the stair.',
+    journal: 'The observatory foundations are older than the observatory. Someone built cells around a sealed stair and then erased the prisoners from every record.',
+    boss: 'salt_knight' as EnemyKind,
+    regulars: ['listener', 'leech', 'warden', 'listener', 'bent'] as EnemyKind[],
+  },
+  2: {
+    name: 'II · The City Below',
+    objective: 'Wake both hymn altars, then confront the Choir Beneath.',
+    journal: 'A buried district survives under the cells: plazas, shrines and doors sized for people who were almost human. A lone cartographer is still here.',
+    boss: 'choir' as EnemyKind,
+    regulars: ['moth', 'pilgrim', 'oracle', 'husk', 'pilgrim', 'moth'] as EnemyKind[],
+  },
+  3: {
+    name: 'III · The Dreaming Depths',
+    objective: 'Recover two black-star memories and reach the Heart of the Abyss.',
+    journal: 'Below the city, architecture gives way to memory. Corridors repeat places from your life incorrectly. Something at the center is dreaming you back.',
+    boss: 'abyss_heart' as EnemyKind,
+    regulars: ['oracle', 'bent', 'husk', 'moth', 'oracle', 'bent', 'pilgrim'] as EnemyKind[],
+  },
+  4: {
+    name: 'IV · The Great Abyss',
+    objective: 'Stabilize all three anchor sigils and cross the final chamber.',
+    journal: 'There is no architecture here, only a route assembled around your expectation of one. Three anchor sigils keep the final chamber from falling out of reality.',
+    boss: 'void_saint' as EnemyKind,
+    regulars: ['oracle', 'husk', 'listener', 'bent', 'bell_devourer', 'moth', 'pilgrim', 'oracle'] as EnemyKind[],
+  },
+} as const
+
+export const SETPIECE_TEXT: Record<number, Array<{ title: string; text: string; reward?: string; sanity: number }>> = {
+  1: [
+    { title: 'THE EMPTY CELL', text: 'The lock is on the inside. Scratches in the stone count upward from a number larger than the age of the observatory.', sanity: -1, reward: 'field_dressing' },
+    { title: 'THE DRY WELL', text: 'A well descends through solid foundation. You hear surf far below and something breathing between waves.', sanity: -2 },
+  ],
+  2: [
+    { title: 'THE MARKET OF NAMES', text: 'Stone stalls display clay tags bearing names. One bears yours in a handwriting you recognize.', sanity: -2, reward: 'lucid_tonic' },
+    { title: 'THE SILENT THEATRE', text: 'Rows of seats face a blank wall. When you turn away, the audience applauds once.', sanity: -2 },
+  ],
+  3: [
+    { title: 'THE WRONG BEDROOM', text: 'Your childhood room is reproduced exactly except for the extra door behind the bed. It opens onto the corridor you just left.', sanity: -3, reward: 'white_tincture' },
+    { title: 'THE MIRROR WITHOUT YOU', text: 'A tall mirror reflects the corridor, your lamp, your weapon—and no one holding them.', sanity: -3 },
+  ],
+  4: [
+    { title: 'THE LAST SHORE', text: 'Black water laps against a stone threshold. Stars are reflected in it that do not exist above any world you know.', sanity: -2, reward: 'black_draught' },
+    { title: 'THE OBSERVATORY ABOVE', text: 'For one impossible minute you stand back at the surface observatory and see yourself descending below through the floor.', sanity: -3 },
+  ],
+}
