@@ -2,7 +2,18 @@
 
 **Abyssal Descent** is an original open-source cosmic-horror grid dungeon crawler for the browser. It is inspired by classic first-person CRPGs and dungeon crawlers while using original code, writing, enemies, maps, systems and presentation.
 
-Current release: **v1.1.0 — bilingual EN/ES edition**.
+Current release: **v1.2.0 — PWA / portable saves / persistent Codex**.
+
+## What changed in v1.2.0
+
+- Added an installable **Progressive Web App (PWA)** with a relative GitHub-Pages-safe manifest, 192/512 icons and a versioned service worker.
+- After the first successful load, the production game can reload and play **offline** from its local cache.
+- Added **Export save** / **Import save**. The JSON export contains the validated v5 expedition, persistent Codex progress and language preference.
+- Imports are validated atomically before replacing the current checkpoint; malformed files cannot overwrite a valid save.
+- Added a persistent **Codex** accessible from the always-available expedition tools bar, covering the 14 enemies, 26 items/relics, four acts, discovered journal notes, five endings and eight authored anomalies.
+- Codex discoveries persist independently of individual expeditions and are merged, not erased, when importing another profile.
+- Added secret/anomaly completion percentages and an overall discovery completion indicator.
+- Extended the production release gate to verify manifest/service-worker assets and to smoke-test Codex unlocks plus valid/invalid save export/import.
 
 ## What changed in v1.1.0
 
@@ -43,6 +54,7 @@ v1.0.1 removes that deployment trap:
 - Reduced-motion and audio preferences stored independently from expedition saves.
 - Keyboard plus clickable/touch-friendly controls.
 - Complete **English / Spanish** interface and game-text localization with persistent language selection.
+- Installable/offline PWA production build with portable JSON saves and persistent Codex metaprogression.
 
 ## Run locally — no dependency installation required
 
@@ -89,7 +101,8 @@ npm run check
 4. EN/ES localization coverage for UI, content and dynamic game text.
 5. Standalone asset/parity verification.
 6. Standalone boot + expedition-start smoke test using the production canvas runtime.
-7. Static `dist/` build.
+7. PWA manifest/service-worker/install assets and portable-save/Codex smoke coverage.
+8. Static `dist/` build.
 
 For source-only React/Phaser type/build checks after installing dependencies:
 
@@ -103,6 +116,19 @@ npm run build:source
 Use the **ES / EN** selector in the top bar at any time. The selection is saved under `abyssal-descent-language-v1` and is independent from the campaign save. On a first visit, Spanish is selected automatically for browsers configured with a Spanish locale.
 
 El selector **ES / EN** de la barra superior puede cambiarse en cualquier momento. La preferencia se conserva entre sesiones y no modifica ni invalida la partida guardada.
+
+## PWA / offline installation
+
+The production release includes `manifest.webmanifest`, 192/512 PNG icons and `sw.js`. On supported desktop/mobile browsers an **Install app** button appears when the browser exposes its install prompt. Browser-menu installation remains available where the prompt event is not exposed.
+
+The service worker uses a versioned cache and relative URLs, so it works under the GitHub Pages project path (`/Abyssal-Descent/`) as well as local static hosting. After one successful online load, the application shell and game modules are available offline.
+
+## Portable saves and Codex
+
+- **Export save** downloads a `.json` backup containing the v5 campaign save, Codex discoveries and selected language.
+- **Import save** validates the campaign before replacing local storage. Existing Codex discoveries are merged with imported discoveries.
+- The Codex is available from the persistent expedition tools bar, is stored under `abyssal-descent-codex-v1`, and tracks enemies, items/relics, acts, notes, endings and the eight authored anomalies across expeditions.
+- Existing valid v5 saves from v1.0.x/v1.1.0 remain compatible.
 
 ## Controls
 
@@ -131,6 +157,7 @@ The game uses save format **v5** under `abyssal-descent-save-v5`.
 - A dead run cannot overwrite the last valid checkpoint.
 - Browser storage failures are handled without crashing the game.
 - Structurally malformed saves are rejected before live state is changed.
+- v1.2.0 can export/import portable JSON backups without changing the underlying v5 campaign-save format.
 
 ## GitHub Pages
 

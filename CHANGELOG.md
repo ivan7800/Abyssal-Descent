@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.2.0 — PWA, portable saves and persistent Codex
+
+### Installable / offline production
+
+- Added a GitHub-Pages-safe PWA manifest, local 192/512 icons and a versioned service worker.
+- Production remains dependency-free at runtime and can reload offline after its first successful cached visit.
+- Added browser install-prompt integration while preserving normal browser-menu installation.
+
+### Portable save management
+
+- Added Export Save and Import Save controls.
+- Exports package the validated v5 expedition, persistent Codex metadata and language preference into a portable JSON file.
+- Imports validate the save before storage mutation; malformed imports leave the current valid checkpoint untouched.
+- Imported Codex progress is merged with local discoveries rather than replacing them.
+
+### Persistent Codex
+
+- Added a persistent Codex launcher to the expedition tools bar, available from the title screen and during an expedition.
+- Tracks all 14 enemy definitions, 26 item/relic definitions, four acts, discovered journal notes, five endings and eight authored anomaly rooms.
+- Unlocks persist independently across expeditions under `abyssal-descent-codex-v1`.
+- Added overall completion and explicit anomaly/secret percentage readouts.
+- Codex import validation rejects unknown enemy/item/ending IDs and invalid anomaly IDs.
+
+### Release engineering
+
+- Static release verification now requires the manifest, service worker and both application icons.
+- Production smoke test now validates Codex starting unlocks, save export, valid import restore and invalid-import checkpoint preservation.
+- `npm run check` continues to run the unchanged 4,000-floor generation and boss-balance gates before producing `dist/`.
+
 ## 1.1.0 — English / Spanish localization
 
 ### Full bilingual experience

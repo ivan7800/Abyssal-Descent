@@ -1,5 +1,23 @@
-# Abyssal Descent v1.1.0 — Validation Report
+# Abyssal Descent v1.2.0 — Validation Report
 
+
+
+## v1.2.0 PWA / portable-save / Codex gate
+
+The shipping standalone build now includes a relative-scope PWA manifest, versioned service worker, two local PNG application icons, portable save export/import and persistent Codex metaprogression.
+
+Automated checks verify:
+
+- `manifest.webmanifest` uses `./` start/scope and `standalone` display mode;
+- service-worker install/activate/cache markers and all required local assets are present;
+- no runtime CDN/bare-import dependency is introduced;
+- the starting expedition unlocks Act I and starting items in the Codex;
+- export produces an `abyssal-descent-save` bundle tagged `gameVersion: 1.2.0`;
+- importing that validated bundle restores the saved state;
+- malformed import text cannot overwrite the existing valid v5 checkpoint;
+- Codex payload validation only accepts known content IDs, valid ending titles and the eight authored anomaly IDs.
+
+`npm run check` passes after these additions. The underlying campaign save remains format v5, preserving compatibility with valid previous saves.
 
 ## v1.1.0 bilingual release gate
 
@@ -74,7 +92,7 @@ The deterministic Monte Carlo gate still passes all class/act/profile thresholds
 - the production runtime contains the required canvas compatibility layer;
 - critical game-system markers remain present in both source and production scene code.
 
-**Result: PASS — 9 required static assets present; 14 production JS modules resolve locally; no runtime CDN dependency.**
+**Result: PASS — 16 required static/PWA assets present; 17 production JS modules resolve locally; no runtime CDN dependency.**
 
 ## 6. Production runtime boot — PASS
 
@@ -89,7 +107,7 @@ Verified:
 - turn/save/preference actions remain functional;
 - canvas renderer performs real draw operations.
 
-**Result: PASS — 385 canvas operations in the smoke run.**
+**Result: PASS — production smoke also exercises Codex unlocks plus save export/import and malformed-import preservation.**
 
 ## 7. Production build — PASS
 

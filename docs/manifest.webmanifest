@@ -1,0 +1,17 @@
+{
+  "name": "Abyssal Descent",
+  "short_name": "Abyssal",
+  "description": "Cosmic-horror grid dungeon crawler / dungeon crawler de terror cósmico.",
+  "lang": "en",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#040604",
+  "theme_color": "#070a08",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {"src":"./icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"./icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
