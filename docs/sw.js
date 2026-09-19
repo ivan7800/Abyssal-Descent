@@ -1,4 +1,4 @@
-const VERSION='abyssal-descent-v1.2.0'
+const VERSION='abyssal-descent-v1.2.0-r2'
 const CORE=[
   './','./index.html','./styles.css','./v12.css','./main.js','./v12.js','./phaser-lite.js','./manifest.webmanifest',
   './icons/icon-192.png','./icons/icon-512.png',

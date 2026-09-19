@@ -2,8 +2,8 @@ import { ENEMY_DEFS, FLOOR_DATA, ITEM_DEFS, SETPIECE_TEXT } from './game/content
 import { getLanguage, localizeEnemy, localizeFloor, localizeItem, translateText } from './i18n.js'
 import { CODEX_KEY, ENDING_TITLES, SAVE_KEY, loadCodex, makeExportBundle, parseImport, safeGet, safeRemove, safeSet, saveCodex, updateCodexFromSnapshot } from './meta.js'
 
-const api=window.__abyssal
-if(!api)throw new Error('Abyssal v1.2 layer requires the core runtime')
+let api=window.__abyssal
+if(!api)api=await new Promise((resolve,reject)=>{let tries=0;const poll=()=>{if(window.__abyssal)return resolve(window.__abyssal);if(++tries>200)return reject(new Error('Abyssal v1.2 layer could not find the core runtime'));setTimeout(poll,5)};poll()})
 
 const TEXT={
  en:{tools:'Expedition tools',install:'Install app',export:'Export save',import:'Import save',codex:'Codex',close:'Close',cancel:'Cancel',chooseFile:'Choose a JSON backup',noSave:'No valid expedition save is available to export.',exported:'Portable save exported.',imported:'Save imported. The expedition is ready to resume.',invalid:'That file is not a valid Abyssal Descent save. Your current checkpoint was preserved.',readFail:'The selected file could not be read.',storageFail:'Browser storage is unavailable, so the imported save could not be stored.',installed:'Abyssal Descent is installed.',installUnavailable:'Installation is not available in this browser right now.',offline:'Offline ready',completion:'Codex completion',bestiary:'Bestiary',relics:'Items & relics',acts:'Acts',anomalies:'Anomalies',notes:'Field notes',endings:'Endings',discovered:'discovered',locked:'Undiscovered',none:'Nothing recorded yet.',portable:'Portable saves include expedition, Codex discoveries and language.',meta:'Discoveries persist across expeditions.',act:'Act',objective:'Objective',journal:'Archive',secret:'Anomaly',secretHint:'Find authored anomalies hidden in each act.',notesHint:'Journal discoveries are preserved here across expeditions.'},
