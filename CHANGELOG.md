@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.1.0 — English / Spanish localization
+
+### Full bilingual experience
+
+- Added persistent **ES / EN** language controls on the title screen and during active expeditions.
+- Added browser-locale detection: Spanish is the first-run default for `es-*` browsers while English remains available instantly.
+- Localized all three archetypes, all 26 items, all 14 enemies, enemy intents, four acts, objectives, journals, eight authored anomaly rooms, combat/exploration logs, interactions and all endings.
+- First-person canvas labels, overlays, floor names and Surveyor bearings now redraw immediately in the selected language.
+- Language preference is stored separately from save data so switching language never invalidates an expedition.
+- Kept English text as the canonical game-state data, translating only at presentation time; existing v5 saves remain compatible.
+
+### QA / release engineering
+
+- Added `scripts/i18n-check.cjs` with content-count and dynamic-text assertions.
+- Added explicit production-language selector coverage through the standalone localization gate; existing source UI regression remains unchanged.
+- Standalone runtime smoke now verifies language preference persistence.
+- Static release validation now requires the standalone `i18n.js` module and verifies the production localization layer without altering canonical save-state strings.
+
 ## 1.0.1 — GitHub Pages black-screen hotfix
 
 ### Deployment fix

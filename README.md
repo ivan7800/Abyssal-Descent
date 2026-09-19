@@ -2,7 +2,17 @@
 
 **Abyssal Descent** is an original open-source cosmic-horror grid dungeon crawler for the browser. It is inspired by classic first-person CRPGs and dungeon crawlers while using original code, writing, enemies, maps, systems and presentation.
 
-Current release: **v1.0.1 — black-screen deployment hotfix**.
+Current release: **v1.1.0 — bilingual EN/ES edition**.
+
+## What changed in v1.1.0
+
+- Added a persistent **Español / English** language selector available from the title screen and during an expedition.
+- Spanish is selected automatically on first visit when the browser locale begins with `es`; the player can override it at any time.
+- Localized the full player-facing experience: UI, archetypes, items, enemies, intents, four acts, objectives, journal entries, combat/exploration logs, set-piece rooms, endings and canvas overlays.
+- Language changes redraw the first-person canvas immediately and do not require restarting or abandoning a run.
+- Language preference is stored independently from expedition saves.
+- Added `npm run i18n-check` and included it in the release gate so missing EN/ES content fails CI.
+- The standalone production runtime used by GitHub Pages is fully bilingual while canonical game state/save data remains language-neutral.
 
 ## What changed in v1.0.1
 
@@ -32,6 +42,7 @@ v1.0.1 removes that deployment trap:
 - Procedural Web Audio ambience/SFX with no external audio assets.
 - Reduced-motion and audio preferences stored independently from expedition saves.
 - Keyboard plus clickable/touch-friendly controls.
+- Complete **English / Spanish** interface and game-text localization with persistent language selection.
 
 ## Run locally — no dependency installation required
 
@@ -63,6 +74,7 @@ npm run dev:source
 npm run validate
 npm run balance
 npm run ui-regression
+npm run i18n-check
 npm run static-check
 npm run runtime-smoke
 npm test
@@ -74,9 +86,10 @@ npm run check
 1. Procedural/content validation.
 2. Deterministic boss-balance regression.
 3. UI/button and complete four-act campaign regression.
-4. Standalone asset/parity verification.
-5. Standalone boot + expedition-start smoke test using the production canvas runtime.
-6. Static `dist/` build.
+4. EN/ES localization coverage for UI, content and dynamic game text.
+5. Standalone asset/parity verification.
+6. Standalone boot + expedition-start smoke test using the production canvas runtime.
+7. Static `dist/` build.
 
 For source-only React/Phaser type/build checks after installing dependencies:
 
@@ -84,6 +97,12 @@ For source-only React/Phaser type/build checks after installing dependencies:
 npm run typecheck
 npm run build:source
 ```
+
+## Language / Idioma
+
+Use the **ES / EN** selector in the top bar at any time. The selection is saved under `abyssal-descent-language-v1` and is independent from the campaign save. On a first visit, Spanish is selected automatically for browsers configured with a Spanish locale.
+
+El selector **ES / EN** de la barra superior puede cambiarse en cualquier momento. La preferencia se conserva entre sesiones y no modifica ni invalida la partida guardada.
 
 ## Controls
 

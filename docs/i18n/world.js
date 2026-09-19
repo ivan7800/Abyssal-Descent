@@ -1,0 +1,17 @@
+export const FLOOR_ES = {
+ 1:{name:'I · Las Celdas Olvidadas',objective:'Encuentra y derrota al Guardián de Sal. Lleva su sello hasta la escalera.',journal:'Los cimientos del observatorio son más antiguos que el propio observatorio. Alguien construyó celdas alrededor de una escalera sellada y después borró a los prisioneros de todos los registros.'},
+ 2:{name:'II · La Ciudad Inferior',objective:'Despierta ambos altares del himno y después enfréntate al Coro de las Profundidades.',journal:'Bajo las celdas sobrevive un distrito enterrado: plazas, santuarios y puertas dimensionadas para personas que eran casi humanas. Una cartógrafa solitaria sigue aquí.'},
+ 3:{name:'III · Las Profundidades Soñantes',objective:'Recupera dos recuerdos de la Estrella Negra y alcanza el Corazón del Abismo.',journal:'Bajo la ciudad, la arquitectura deja paso a la memoria. Los corredores repiten lugares de tu vida de forma incorrecta. Algo en el centro te está soñando de vuelta.'},
+ 4:{name:'IV · El Gran Abismo',objective:'Estabiliza los tres sigilos de anclaje y cruza la cámara final.',journal:'Aquí no hay arquitectura, solo una ruta ensamblada alrededor de tu expectativa de que exista. Tres sigilos de anclaje impiden que la cámara final caiga fuera de la realidad.'},
+}
+
+export const SETPIECE_ES = {
+ 'THE EMPTY CELL':'LA CELDA VACÍA','The lock is on the inside. Scratches in the stone count upward from a number larger than the age of the observatory.':'La cerradura está por dentro. Los arañazos en la piedra cuentan hacia arriba desde un número mayor que la edad del observatorio.',
+ 'THE DRY WELL':'EL POZO SECO','A well descends through solid foundation. You hear surf far below and something breathing between waves.':'Un pozo desciende a través de cimientos sólidos. Oyes oleaje muy abajo y algo respirando entre las olas.',
+ 'THE MARKET OF NAMES':'EL MERCADO DE LOS NOMBRES','Stone stalls display clay tags bearing names. One bears yours in a handwriting you recognize.':'Los puestos de piedra exhiben placas de arcilla con nombres. Una lleva el tuyo con una caligrafía que reconoces.',
+ 'THE SILENT THEATRE':'EL TEATRO SILENCIOSO','Rows of seats face a blank wall. When you turn away, the audience applauds once.':'Filas de asientos miran hacia una pared vacía. Cuando te das la vuelta, el público aplaude una sola vez.',
+ 'THE WRONG BEDROOM':'EL DORMITORIO EQUIVOCADO','Your childhood room is reproduced exactly except for the extra door behind the bed. It opens onto the corridor you just left.':'Tu habitación de la infancia está reproducida exactamente salvo por una puerta adicional detrás de la cama. Se abre al corredor que acabas de abandonar.',
+ 'THE MIRROR WITHOUT YOU':'EL ESPEJO SIN TI','A tall mirror reflects the corridor, your lamp, your weapon—and no one holding them.':'Un espejo alto refleja el corredor, tu lámpara y tu arma… pero a nadie sosteniéndolas.',
+ 'THE LAST SHORE':'LA ÚLTIMA ORILLA','Black water laps against a stone threshold. Stars are reflected in it that do not exist above any world you know.':'Agua negra lame un umbral de piedra. En ella se reflejan estrellas que no existen sobre ningún mundo que conozcas.',
+ 'THE OBSERVATORY ABOVE':'EL OBSERVATORIO DE ARRIBA','For one impossible minute you stand back at the surface observatory and see yourself descending below through the floor.':'Durante un minuto imposible vuelves a estar en el observatorio de la superficie y te ves descendiendo bajo él, atravesando el suelo.',
+}

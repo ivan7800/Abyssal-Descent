@@ -1,3 +1,5 @@
+import { getLanguage, translateText } from './i18n.js'
+
 class Emitter {
   constructor(){ this.map=new Map() }
   on(name, fn, ctx){ const a=this.map.get(name)||[]; a.push({fn,ctx,once:false}); this.map.set(name,a); return this }
@@ -67,7 +69,7 @@ class Game {
   }
   renderTexts(){
     const c=this.octx;if(!c)return;c.clearRect(0,0,this.width,this.height)
-    for(const t of [...this.texts].sort((a,b)=>a.depth-b.depth)){ if(!t.visible) continue; const s=t.style||{}; const size=parseFloat(String(s.fontSize||'16'))||16; const family=s.fontFamily||'sans-serif'; c.save(); c.font=`${size}px ${family}`; c.textBaseline='top'; const max=s.wordWrap?.width||0; const lines=wrapLines(c,t.text,max); const lh=size*1.22; const widths=lines.map(line=>c.measureText(line).width); const w=Math.max(0,...widths); const h=Math.max(lh,lines.length*lh); const padX=s.padding?.x||0,padY=s.padding?.y||0; const boxW=w+padX*2,boxH=h+padY*2; const bx=t.x-boxW*t.originX,by=t.y-boxH*t.originY; if(s.backgroundColor){c.fillStyle=s.backgroundColor;c.fillRect(bx,by,boxW,boxH)} c.fillStyle=s.color||'#fff'; c.textAlign=s.align==='center'?'center':'left'; const tx=s.align==='center'?bx+boxW/2:bx+padX; lines.forEach((line,i)=>c.fillText(line,tx,by+padY+i*lh)); c.restore() }
+    for(const t of [...this.texts].sort((a,b)=>a.depth-b.depth)){ if(!t.visible) continue; const s=t.style||{}; const size=parseFloat(String(s.fontSize||'16'))||16; const family=s.fontFamily||'sans-serif'; c.save(); c.font=`${size}px ${family}`; c.textBaseline='top'; const max=s.wordWrap?.width||0; const displayText=translateText(t.text,getLanguage()); const lines=wrapLines(c,displayText,max); const lh=size*1.22; const widths=lines.map(line=>c.measureText(line).width); const w=Math.max(0,...widths); const h=Math.max(lh,lines.length*lh); const padX=s.padding?.x||0,padY=s.padding?.y||0; const boxW=w+padX*2,boxH=h+padY*2; const bx=t.x-boxW*t.originX,by=t.y-boxH*t.originY; if(s.backgroundColor){c.fillStyle=s.backgroundColor;c.fillRect(bx,by,boxW,boxH)} c.fillStyle=s.color||'#fff'; c.textAlign=s.align==='center'?'center':'left'; const tx=s.align==='center'?bx+boxW/2:bx+padX; lines.forEach((line,i)=>c.fillText(line,tx,by+padY+i*lh)); c.restore() }
   }
   flash(duration){ this.parent.classList.remove('abyssal-flash'); void this.parent.offsetWidth; this.parent.style.setProperty('--flash-duration',`${duration}ms`); this.parent.classList.add('abyssal-flash'); setTimeout(()=>this.parent.classList.remove('abyssal-flash'),duration+30) }
   shake(duration,intensity){ this.parent.classList.remove('abyssal-shake'); void this.parent.offsetWidth; this.parent.style.setProperty('--shake-duration',`${duration}ms`); this.parent.style.setProperty('--shake-px',`${Math.max(1,Math.round(intensity*500))}px`); this.parent.classList.add('abyssal-shake'); setTimeout(()=>this.parent.classList.remove('abyssal-shake'),duration+30) }

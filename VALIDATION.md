@@ -1,4 +1,11 @@
-# Abyssal Descent v1.0.1 — Validation Report
+# Abyssal Descent v1.1.0 — Validation Report
+
+
+## v1.1.0 bilingual release gate
+
+The production gate now includes `npm run i18n-check`. It verifies EN/ES coverage for **3 archetypes, 26 items, 14 enemies, 4 acts and 8 authored set pieces**, plus representative dynamic combat/exploration strings and language switching in the standalone runtime. The localization gate additionally verifies the standalone ES/EN selector and persistent language preference.
+
+`npm run check` on v1.1.0 passes the procedural, balance, UI/campaign, localization, standalone asset, runtime smoke and static build gates.
 
 ## 1. Reported black screen — root cause confirmed
 
@@ -67,7 +74,7 @@ The deterministic Monte Carlo gate still passes all class/act/profile thresholds
 - the production runtime contains the required canvas compatibility layer;
 - critical game-system markers remain present in both source and production scene code.
 
-**Result: PASS — 8 required static assets present; no runtime CDN dependency.**
+**Result: PASS — 9 required static assets present; 14 production JS modules resolve locally; no runtime CDN dependency.**
 
 ## 6. Production runtime boot — PASS
 
@@ -82,7 +89,7 @@ Verified:
 - turn/save/preference actions remain functional;
 - canvas renderer performs real draw operations.
 
-**Result: PASS — 379 canvas operations in the smoke run.**
+**Result: PASS — 385 canvas operations in the smoke run.**
 
 ## 7. Production build — PASS
 

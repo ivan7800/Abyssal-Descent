@@ -14,6 +14,11 @@ h1 { font-family: Georgia, serif; font-weight: 500; letter-spacing: -.03em; font
 .eyebrow, .kicker { margin: 0 0 7px; font: 700 .68rem/1.2 ui-monospace, monospace; letter-spacing: .15em; color: #7f9b84; }
 .badge { border: 1px solid #334b39; padding: 7px 10px; border-radius: 999px; color: #9db2a1; font: 700 .7rem ui-monospace, monospace; white-space: nowrap; }
 .runbar { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 12px; }
+
+.language-switch { display: flex; border: 1px solid #2f4635; background: #0b100d; }
+.language-switch button { border: 0; min-width: 42px; padding: 8px 9px; color: #6f8374; }
+.language-switch button + button { border-left: 1px solid #2f4635; }
+.language-switch button.active { background: #1a2a1f; color: #e0e9e2; box-shadow: inset 0 0 0 1px #4d6955; }
 .run-status { margin-right: auto; border: 1px solid #26362a; background: rgba(7,10,8,.88); padding: 8px 12px; display: grid; gap: 2px; min-width: 260px; }
 .run-status span { color: #8fa292; font: 700 .68rem ui-monospace, monospace; text-transform: uppercase; letter-spacing: .06em; }
 .run-status strong { color: #667b6b; font: 500 .65rem ui-monospace, monospace; }

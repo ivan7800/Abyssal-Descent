@@ -1,7 +1,7 @@
 {
   "name": "abyssal-descent",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "node scripts/serve-static.cjs docs 5173",
@@ -12,11 +12,12 @@
     "check": "npm run test && npm run static-check && npm run runtime-smoke && npm run build",
     "balance": "node scripts/balance.cjs",
     "ui-regression": "node scripts/ui-regression.cjs",
-    "test": "npm run validate && npm run balance && npm run ui-regression",
+    "test": "npm run validate && npm run balance && npm run ui-regression && npm run i18n-check",
     "build:source": "tsc -b && vite build",
     "static-check": "node scripts/static-check.cjs",
     "runtime-smoke": "node scripts/standalone-runtime.cjs",
-    "dev:source": "vite --open /source.html"
+    "dev:source": "vite --open /source.html",
+    "i18n-check": "node scripts/i18n-check.cjs"
   },
   "dependencies": {
     "phaser": "3.90.0",
