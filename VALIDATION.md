@@ -1,6 +1,31 @@
-# Abyssal Descent v1.2.0 — Validation Report
+# Abyssal Descent v1.4.0 — Validation Report
 
 
+
+## v1.4.0 Presentation Pass gate
+
+The v1.4 layer is presentation-only and leaves the v1.3 campaign/runtime core unchanged. Automated checks verify the cinematic title hub, Resume/New Expedition navigation, Daily/Codex/Achievements/Options launchers, bilingual Act/guardian cards, Daily completion summary, responsive/reduced-motion presentation and the v1.4 service-worker cache set.
+
+`npm run v14-runtime` boots the production presentation layer against a simulated browser/runtime, verifies the home hub mounts, enters and exits the original expedition-profile screen, and renders an Act transition. The full release gate still passes the unchanged **4,000 / 4,000** floor generation and deterministic boss-balance checks.
+
+## v1.3.0 advanced-options / Daily Descent / achievements gate
+
+The v1.3 product layer is additive to the existing four-act campaign and keeps the procedural generator and combat balance unchanged.
+
+Automated checks verify:
+
+- independent SFX and ambience settings clamp to safe `0..1` ranges;
+- text scaling is constrained to 90–125%;
+- custom gameplay bindings remain unique even when imported input contains collisions;
+- the shared Daily Descent seed is derived from the **UTC** date and has stable `ABYSS-DAILY-YYYY-MM-DD` form;
+- deterministic daily scoring rewards completion while accounting for bosses, kills, secrets, level, steps, damage and retreats;
+- all 12 achievement rules unlock under the expected complete-run/Codex conditions;
+- the production audio runtime contains distinct SFX and ambience buses;
+- the v1.3 JS/CSS/meta assets are linked from the standalone Pages entry and precached by the service worker.
+
+`npm run check` passes with the v1.3 gate included, including a simulated-DOM bootstrap test that mounts the v1.3 toolbar and opens the Settings, Daily Descent and Achievements panels. The release still validates **4,000 / 4,000** generated floors and the same deterministic boss-balance thresholds as v1.2.
+
+A direct standalone typecheck of the modified `src/game/audio.ts` also passes. The full React/Phaser source-project `npm run typecheck` requires installed React/Phaser packages and is not part of the dependency-free Pages release gate.
 
 ## v1.2.0 PWA / portable-save / Codex gate
 
@@ -12,7 +37,7 @@ Automated checks verify:
 - service-worker install/activate/cache markers and all required local assets are present;
 - no runtime CDN/bare-import dependency is introduced;
 - the starting expedition unlocks Act I and starting items in the Codex;
-- export produces an `abyssal-descent-save` bundle tagged `gameVersion: 1.2.0`;
+- export produces an `abyssal-descent-save` bundle tagged with the current product version;
 - importing that validated bundle restores the saved state;
 - malformed import text cannot overwrite the existing valid v5 checkpoint;
 - Codex payload validation only accepts known content IDs, valid ending titles and the eight authored anomaly IDs.
@@ -92,7 +117,7 @@ The deterministic Monte Carlo gate still passes all class/act/profile thresholds
 - the production runtime contains the required canvas compatibility layer;
 - critical game-system markers remain present in both source and production scene code.
 
-**Result: PASS — 16 required static/PWA assets present; 17 production JS modules resolve locally; no runtime CDN dependency.**
+**Result: PASS — 21 required static/PWA/product/presentation assets present; 20 production JS modules resolve locally; no runtime CDN dependency.**
 
 ## 6. Production runtime boot — PASS
 
@@ -129,9 +154,12 @@ which currently runs:
 npm test
 npm run static-check
 npm run runtime-smoke
+npm run v13-runtime
+npm run v14-runtime
 npm run build
 ```
 
 ## 9. Visual browser note
 
 The managed Chromium binary in this audit environment is organization-policy blocked from opening both localhost and `file:` pages. Therefore a screenshot-based visual browser pass cannot be honestly claimed here. This restriction does not affect the production runtime smoke test above, GitHub Pages, or normal browsers.
+

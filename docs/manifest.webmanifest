@@ -1,7 +1,7 @@
 {
   "name": "Abyssal Descent",
   "short_name": "Abyssal",
-  "description": "A bilingual cosmic-horror dungeon crawler with offline play, portable saves, Codex, daily challenges and achievements.",
+  "description": "A bilingual cosmic-horror dungeon crawler with Daily Descent, persistent Codex, achievements and offline play.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",

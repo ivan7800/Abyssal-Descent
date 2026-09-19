@@ -1,5 +1,44 @@
 # Changelog
 
+## 1.4.0 — Presentation Pass
+
+- Added a cinematic title hub with Resume, New Expedition, Daily Descent, Codex, Achievements and Options.
+- Added a reversible title → archetype/seed setup flow; no existing character-creation functionality was removed.
+- Added bilingual Act I–IV transition cards and guardian encounter presentation.
+- Added a Daily Descent completion card with score, steps, damage taken and secrets.
+- Upgraded achievement toasts and boss-panel visual emphasis.
+- Added responsive/mobile presentation rules and reduced-motion fallbacks.
+- Added `v14-check` and `v14-runtime` release gates.
+- Rotated the PWA cache to the v1.4 asset set.
+- Campaign content, generator logic, save format and combat/boss balance remain unchanged from v1.3.0.
+
+## 1.3.0 — Advanced options, Daily Descent and achievements
+
+### Advanced options
+
+- Added separate procedural SFX and ambience volume controls while preserving the existing master audio toggle.
+- Added persistent 90–125% text scaling and fullscreen control.
+- Added remappable primary gameplay bindings for movement, interaction and combat; duplicate assignments swap safely and arrow-key movement aliases remain fixed.
+
+### Daily Descent
+
+- Added a globally shared UTC daily seed (`ABYSS-DAILY-YYYY-MM-DD`).
+- Added deterministic daily scoring based on completion, bosses, kills, secrets, level, steps, damage and retreats.
+- Added a local best record per UTC date and a dedicated daily-run panel.
+
+### Achievements / Codex
+
+- Added 12 persistent internal achievements.
+- Achievements cover first kill, guardians, reaching Act IV, endings, no-retreat completion, anomalies, full item/enemy collections and Daily Descent completion.
+- Achievement progress is rendered in its own panel and appended to the Codex.
+
+### Release hardening
+
+- Added `v13-meta.js` as a pure/testable layer for settings sanitization, daily seeds/scoring and achievement evaluation.
+- Added `npm run v13-check` to the release gate.
+- Service-worker cache advanced to the v1.3 asset set.
+- Campaign save format remains v5 and boss/generator balance thresholds are unchanged.
+
 ## 1.2.0 — PWA, portable saves and persistent Codex
 
 ### Installable / offline production

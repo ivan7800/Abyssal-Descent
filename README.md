@@ -2,7 +2,29 @@
 
 **Abyssal Descent** is an original open-source cosmic-horror grid dungeon crawler for the browser. It is inspired by classic first-person CRPGs and dungeon crawlers while using original code, writing, enemies, maps, systems and presentation.
 
-Current release: **v1.2.0 — PWA / portable saves / persistent Codex**.
+Current release: **v1.4.0 — Presentation Pass**.
+
+## What changed in v1.4.0
+
+- Added a cinematic **title hub** with Resume, New Expedition, Daily Descent, Codex, Achievements and Options.
+- New Expedition now reveals the original archetype/seed setup without removing or simplifying it; `Esc` or **Back to title** returns to the new hub.
+- Added bilingual **Act I–IV transition cards** and dedicated guardian encounter presentation.
+- Added a cinematic **Daily Descent result card** with score, steps, damage taken and secrets.
+- Upgraded achievement toasts and boss-panel visual emphasis.
+- Added responsive/mobile layouts plus `prefers-reduced-motion` fallbacks; the existing in-game Reduced Motion option also shortens presentation timing.
+- Campaign logic, procedural generation, enemies, items, saves and boss balance are unchanged from v1.3.0.
+- Added `npm run v14-check` and `npm run v14-runtime` to the release gate.
+
+## What changed in v1.3.0
+
+- Added **Advanced options** without changing campaign balance: independent SFX and ambience volume, 90–125% text scaling, fullscreen control and persistent keyboard remapping.
+- Gameplay primary keys can be rebound safely; collisions swap bindings automatically, while arrow keys remain fixed movement aliases for accessibility.
+- Added **Daily Descent** using a globally shared UTC seed (`ABYSS-DAILY-YYYY-MM-DD`), a deterministic scoring model and a locally stored best result for each date.
+- Added **12 persistent achievements** tied to combat milestones, depth, no-retreat completions, Codex collection, authored anomalies, endings and Daily Descent completion.
+- Achievement progress is surfaced both in its own panel and inside the persistent Codex.
+- Split procedural Web Audio into independent SFX and ambience buses; the existing global audio on/off switch remains intact.
+- Added a dedicated `npm run v13-check` gate for settings sanitization, binding collisions, UTC daily seeds, scoring and achievement unlock rules.
+- Kept the v5 campaign save format, procedural generation and boss balance unchanged.
 
 ## What changed in v1.2.0
 
@@ -50,11 +72,14 @@ v1.0.1 removes that deployment trap:
 - NPC/journal narrative, optional secrets, multiple endings and a hidden ending path.
 - Local manual saves and autosave checkpoints through `localStorage`, with defensive save validation and corrupted-save recovery.
 - End-of-run statistics.
-- Procedural Web Audio ambience/SFX with no external audio assets.
+- Procedural Web Audio ambience/SFX with no external audio assets, now with independent effects/ambience volume controls.
 - Reduced-motion and audio preferences stored independently from expedition saves.
 - Keyboard plus clickable/touch-friendly controls.
 - Complete **English / Spanish** interface and game-text localization with persistent language selection.
 - Installable/offline PWA production build with portable JSON saves and persistent Codex metaprogression.
+- Advanced options with persistent key remapping, fullscreen and text scaling.
+- UTC-shared Daily Descent seed, deterministic daily score and local best records.
+- 12 persistent internal achievements integrated with the Codex.
 
 ## Run locally — no dependency installation required
 
@@ -87,6 +112,10 @@ npm run validate
 npm run balance
 npm run ui-regression
 npm run i18n-check
+npm run v13-check
+npm run v13-runtime
+npm run v14-check
+npm run v14-runtime
 npm run static-check
 npm run runtime-smoke
 npm test
@@ -99,10 +128,14 @@ npm run check
 2. Deterministic boss-balance regression.
 3. UI/button and complete four-act campaign regression.
 4. EN/ES localization coverage for UI, content and dynamic game text.
-5. Standalone asset/parity verification.
-6. Standalone boot + expedition-start smoke test using the production canvas runtime.
-7. PWA manifest/service-worker/install assets and portable-save/Codex smoke coverage.
-8. Static `dist/` build.
+5. v1.3 product-system validation: advanced settings, remappable bindings, UTC daily seed/scoring and 12 achievements.
+6. v1.3 DOM/bootstrap smoke: toolbar, settings, Daily Descent, achievements and split-audio application.
+7. v1.4 presentation validation: title hub, bilingual navigation, act/guardian cards and Daily-result presentation.
+8. v1.4 DOM/bootstrap smoke: home screen, expedition-profile navigation and act transition.
+9. Standalone asset/parity verification.
+10. Standalone boot + expedition-start smoke test using the production canvas runtime.
+11. PWA manifest/service-worker/install assets and portable-save/Codex smoke coverage.
+12. Static `dist/` build.
 
 For source-only React/Phaser type/build checks after installing dependencies:
 
@@ -130,7 +163,16 @@ The service worker uses a versioned cache and relative URLs, so it works under t
 - The Codex is available from the persistent expedition tools bar, is stored under `abyssal-descent-codex-v1`, and tracks enemies, items/relics, acts, notes, endings and the eight authored anomalies across expeditions.
 - Existing valid v5 saves from v1.0.x/v1.1.0 remain compatible.
 
+## Advanced options / Daily Descent / achievements
+
+- **Advanced options** exposes separate Effects and Ambience volume, text scale, fullscreen and keyboard rebinding. Settings are stored under `abyssal-descent-v13-settings-v1`.
+- The remappable primary bindings cover Forward, Back, Turn Left/Right, Interact, Attack, Guard, Focus, Ability and Flee. Arrow keys remain fixed movement aliases.
+- **Daily Descent** derives its dungeon seed from the UTC calendar date, so every player receives the same seeded layout on the same day. The best local score for each date is retained.
+- **Achievements** are persistent metaprogression stored under `abyssal-descent-achievements-v1`; 12 achievements cover combat, progression, Codex completion, endings and the daily challenge.
+
 ## Controls
+
+Default primary bindings are shown below and can now be changed in **Advanced options**.
 
 Exploration:
 
@@ -157,7 +199,8 @@ The game uses save format **v5** under `abyssal-descent-save-v5`.
 - A dead run cannot overwrite the last valid checkpoint.
 - Browser storage failures are handled without crashing the game.
 - Structurally malformed saves are rejected before live state is changed.
-- v1.2.0 can export/import portable JSON backups without changing the underlying v5 campaign-save format.
+- v1.2.0+ can export/import portable JSON backups without changing the underlying v5 campaign-save format.
+- v1.3.0 keeps Daily Descent, achievements and advanced-option preferences as browser-local metaprogression.
 
 ## GitHub Pages
 
