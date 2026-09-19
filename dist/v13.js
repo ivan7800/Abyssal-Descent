@@ -1,0 +1,80 @@
+import { ACHIEVEMENTS, DEFAULT_BINDINGS, achievementById, calculateDailyScore, codeLabel, dailySeed, evaluateAchievements, isDailySeed, loadAchievements, loadDaily, loadSettings, recordDaily, resetSettings, saveAchievements, saveSettings, sanitizeSettings } from './v13-meta.js'
+
+let api=window.__abyssal
+if(!api)api=await new Promise((resolve,reject)=>{let tries=0;const poll=()=>{if(window.__abyssal)return resolve(window.__abyssal);if(++tries>300)return reject(new Error('Abyssal v1.3 layer could not find the core runtime'));setTimeout(poll,5)};poll()})
+let v12=window.__abyssalV12
+if(!v12)v12=await new Promise((resolve,reject)=>{let tries=0;const poll=()=>{if(window.__abyssalV12)return resolve(window.__abyssalV12);if(++tries>300)return reject(new Error('Abyssal v1.3 layer could not find the v1.2 runtime'));setTimeout(poll,5)};poll()})
+
+const TEXT={
+ en:{settings:'Advanced options',daily:'Daily Descent',achievements:'Achievements',keyboard:'Keyboard',sound:'Sound mix',sfx:'Effects',ambience:'Ambience',textScale:'Text size',fullscreen:'Fullscreen',exitFullscreen:'Exit fullscreen',reset:'Reset defaults',close:'Close',pressKey:'Press a key…',arrowHint:'Arrow keys remain fixed movement aliases.',dailyTitle:'Daily Descent',dailyBody:'A globally shared UTC seed. Everyone exploring today receives the same dungeon layout.',todaySeed:"Today's seed",copy:'Copy seed',copied:'Daily seed copied.',startDaily:'Begin daily run',returnTitle:'Return to the main menu to begin the daily run.',best:'Best score',noRecord:'No completed run yet',score:'Score',class:'Class',steps:'Steps',achievementsTitle:'Field achievements',unlocked:'unlocked',locked:'Locked',dailyActive:'Daily run',dailyComplete:'Daily run recorded',settingsSaved:'Options saved',remapHint:'Select a binding, then press a key. Duplicate keys are swapped automatically.',installNote:'Options are local to this browser.',achievementUnlocked:'Achievement unlocked',dailyBest:'New daily best',currentScore:'Current score'},
+ es:{settings:'Opciones avanzadas',daily:'Descenso diario',achievements:'Logros',keyboard:'Teclado',sound:'Mezcla de sonido',sfx:'Efectos',ambience:'Ambiente',textScale:'Tamaño de texto',fullscreen:'Pantalla completa',exitFullscreen:'Salir de pantalla completa',reset:'Restablecer',close:'Cerrar',pressKey:'Pulsa una tecla…',arrowHint:'Las flechas siguen siendo accesos fijos de movimiento.',dailyTitle:'Descenso diario',dailyBody:'Una seed UTC compartida globalmente. Todos los jugadores reciben hoy la misma distribución de mazmorra.',todaySeed:'Seed de hoy',copy:'Copiar seed',copied:'Seed diaria copiada.',startDaily:'Iniciar partida diaria',returnTitle:'Vuelve al menú principal para iniciar el desafío diario.',best:'Mejor puntuación',noRecord:'Aún no hay una partida completada',score:'Puntuación',class:'Clase',steps:'Pasos',achievementsTitle:'Logros de campo',unlocked:'desbloqueados',locked:'Bloqueado',dailyActive:'Partida diaria',dailyComplete:'Partida diaria registrada',settingsSaved:'Opciones guardadas',remapHint:'Selecciona una tecla y pulsa otra. Las teclas duplicadas se intercambian automáticamente.',installNote:'Las opciones son locales a este navegador.',achievementUnlocked:'Logro desbloqueado',dailyBest:'Nuevo récord diario',currentScore:'Puntuación actual'}
+}
+const ACTION_LABEL={en:{forward:'Forward',back:'Back',left:'Turn left',right:'Turn right',interact:'Interact',attack:'Attack',guard:'Guard',focus:'Focus',ability:'Ability',flee:'Flee'},es:{forward:'Avanzar',back:'Retroceder',left:'Girar izquierda',right:'Girar derecha',interact:'Interactuar',attack:'Atacar',guard:'Defender',focus:'Concentrarse',ability:'Habilidad',flee:'Huir'}}
+const lang=()=>api.getLanguage?.()||'en',t=k=>(TEXT[lang()]??TEXT.en)[k]??k,esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+let settings=loadSettings(),achievements=loadAchievements(),modal=null,listening=null,toastTimer=null,lastDailyRecordKey=''
+const root=document.querySelector('.shell')||document.body
+const v12Tools=document.getElementById('v12-tools')
+const tools=document.createElement('section');tools.id='v13-tools';tools.className='v13-tools';v12Tools?.insertAdjacentElement('afterend',tools)
+const toast=document.createElement('div');toast.className='v13-toast';toast.hidden=true;toast.setAttribute('role','status');toast.setAttribute('aria-live','polite');document.body.append(toast)
+
+function showToast(title,body=''){toast.innerHTML=`<strong>${esc(title)}</strong>${body?`<span>${esc(body)}</span>`:''}`;toast.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.hidden=true,4200)}
+function applySettings(){settings=sanitizeSettings(settings);document.documentElement.style.fontSize=`${Math.round(settings.textScale*100)}%`;const audio=api.getGame?.()?.scene?.audio;audio?.setVolumes?.(settings.sfxVolume,settings.ambienceVolume);saveSettings(settings);syncKeyLabels()}
+function todayRecord(){return loadDaily()[dailySeed().slice('ABYSS-DAILY-'.length)]??null}
+function renderTools(){
+ const state=api.getState?.()??{},daily=isDailySeed(state.seed),score=daily?calculateDailyScore(state):null,unlocked=achievements.unlocked.length
+ const badge=document.getElementById('badge');if(badge){badge.textContent='FINAL · v1.3.0';badge.classList.toggle('v13-badge-daily',daily)}
+ tools.innerHTML=`${daily?`<span class="daily-mark">${esc(t('dailyActive'))} · ${esc(state.seed)} · ${esc(t('currentScore'))} ${score}</span>`:`<span class="daily-mark">v1.3 · ${esc(t('arrowHint'))}</span>`}<button data-v13="settings">${esc(t('settings'))}</button><button data-v13="daily">${esc(t('daily'))}</button><button data-v13="achievements">${esc(t('achievements'))} <span>${unlocked}/${ACHIEVEMENTS.length}</span></button>`
+ syncKeyLabels();augmentCodex()
+}
+function closeModal(){modal?.remove();modal=null;listening=null}
+function openModal(kind){closeModal();modal=document.createElement('div');modal.className='v13-modal';modal.dataset.kind=kind;document.body.append(modal);renderModal()}
+function header(title,body=''){return `<header><div><h2>${esc(title)}</h2>${body?`<p>${esc(body)}</p>`:''}</div><button class="v13-close" data-v13="close" aria-label="${esc(t('close'))}">×</button></header>`}
+function renderModal(){if(!modal)return;const kind=modal.dataset.kind;if(kind==='settings')renderSettings();else if(kind==='daily')renderDaily();else renderAchievements()}
+function renderSettings(){
+ const labels=ACTION_LABEL[lang()]??ACTION_LABEL.en
+ modal.innerHTML=`<div class="v13-dialog" role="dialog" aria-modal="true">${header(t('settings'),t('installNote'))}<div class="v13-settings-grid"><section class="v13-card"><h3>${esc(t('sound'))}</h3><label class="v13-range"><span>${esc(t('sfx'))}</span><strong>${Math.round(settings.sfxVolume*100)}%</strong><input data-v13-range="sfxVolume" type="range" min="0" max="1" step="0.05" value="${settings.sfxVolume}"></label><label class="v13-range"><span>${esc(t('ambience'))}</span><strong>${Math.round(settings.ambienceVolume*100)}%</strong><input data-v13-range="ambienceVolume" type="range" min="0" max="1" step="0.05" value="${settings.ambienceVolume}"></label><label class="v13-range"><span>${esc(t('textScale'))}</span><strong>${Math.round(settings.textScale*100)}%</strong><input data-v13-range="textScale" type="range" min="0.9" max="1.25" step="0.05" value="${settings.textScale}"></label><div class="v13-actions"><button data-v13="fullscreen">${esc(document.fullscreenElement?t('exitFullscreen'):t('fullscreen'))}</button><button data-v13="reset-settings">${esc(t('reset'))}</button></div></section><section class="v13-card"><h3>${esc(t('keyboard'))}</h3><p>${esc(t('remapHint'))}</p><div class="v13-bindings">${Object.keys(DEFAULT_BINDINGS).map(action=>`<div class="v13-binding"><span>${esc(labels[action])}</span><button data-bind="${action}" class="${listening===action?'listening':''}">${listening===action?esc(t('pressKey')):esc(codeLabel(settings.bindings[action],lang()))}</button></div>`).join('')}</div><p>${esc(t('arrowHint'))}</p></section></div></div>`
+ modal.querySelector('[data-v13="close"]')?.focus()
+}
+function renderDaily(){
+ const seed=dailySeed(),date=seed.slice('ABYSS-DAILY-'.length),record=loadDaily()[date]??null,state=api.getState?.()??{},atTitle=state.mode==='title'
+ modal.innerHTML=`<div class="v13-dialog" role="dialog" aria-modal="true">${header(t('dailyTitle'),t('dailyBody'))}<section class="v13-card"><h3>${esc(t('todaySeed'))}</h3><div class="v13-daily-seed">${esc(seed)}</div><div class="v13-actions"><button data-v13="copy-daily">${esc(t('copy'))}</button><button class="primary" data-v13="start-daily" ${atTitle?'':'disabled'}>${esc(t('startDaily'))}</button></div>${atTitle?'':`<p>${esc(t('returnTitle'))}</p>`}</section><section class="v13-card"><h3>${esc(t('best'))}</h3>${record?`<div class="v13-score"><div><span>${esc(t('score'))}</span><strong>${record.score}</strong></div><div><span>${esc(t('class'))}</span><strong>${esc(record.archetype||'-')}</strong></div><div><span>${esc(t('steps'))}</span><strong>${record.steps??'-'}</strong></div></div>`:`<p>${esc(t('noRecord'))}</p>`}</section></div>`
+}
+function achievementCards(){return ACHIEVEMENTS.map(a=>{const open=achievements.unlocked.includes(a.id),copy=a.name[lang()]??a.name.en,desc=a.description[lang()]??a.description.en;return `<article class="v13-achievement ${open?'unlocked':''}"><div class="icon">${esc(a.icon)}</div><div><strong>${open?esc(copy):'???'}</strong><small>${open?esc(desc):esc(t('locked'))}</small></div></article>`}).join('')}
+function renderAchievements(){modal.innerHTML=`<div class="v13-dialog" role="dialog" aria-modal="true">${header(t('achievementsTitle'),`${achievements.unlocked.length}/${ACHIEVEMENTS.length} ${t('unlocked')}`)}<div class="v13-achievement-grid">${achievementCards()}</div></div>`}
+function augmentCodex(){const scroll=document.querySelector('.codex-scroll');if(!scroll||scroll.querySelector('.v13-codex-achievements'))return;const section=document.createElement('section');section.className='v13-codex-achievements';section.innerHTML=`<h3>${esc(t('achievements'))} · ${achievements.unlocked.length}/${ACHIEVEMENTS.length}</h3><div class="v13-achievement-grid">${achievementCards()}</div>`;scroll.append(section)}
+function selectedArchetype(){return document.querySelector('.archetype-card.selected')?.dataset.archetype||api.getState?.().archetype||'surveyor'}
+async function copyDaily(){try{await navigator.clipboard.writeText(dailySeed());showToast(t('copied'))}catch{const ta=document.createElement('textarea');ta.value=dailySeed();document.body.append(ta);ta.select();document.execCommand?.('copy');ta.remove();showToast(t('copied'))}}
+function startDaily(){if(api.getState?.().mode!=='title')return;const seed=dailySeed();api.send(`start:${selectedArchetype()}:${encodeURIComponent(seed)}`);closeModal()}
+function rebind(action,code){const old=settings.bindings[action];const other=Object.keys(settings.bindings).find(a=>a!==action&&settings.bindings[a]===code);if(other)settings.bindings[other]=old;settings.bindings[action]=code;settings=sanitizeSettings(settings);saveSettings(settings);listening=null;renderSettings();syncKeyLabels()}
+function syncKeyLabels(){
+ const ability=document.querySelector('[data-action="ability"]'),interact=document.querySelector('[data-action="interact"]')
+ if(ability){const next=ability.textContent.replace(/^.*? · /,`${codeLabel(settings.bindings.ability,lang())} · `);if(next!==ability.textContent)ability.textContent=next}
+ if(interact&&interact.textContent.includes(' · ')){const next=interact.textContent.replace(/^.*? · /,`${codeLabel(settings.bindings.interact,lang())} · `);if(next!==interact.textContent)interact.textContent=next}
+}
+function syncDecorations(){const badge=document.getElementById('badge'),state=api.getState?.()??{};if(badge){if(badge.textContent!=='FINAL · v1.3.0')badge.textContent='FINAL · v1.3.0';badge.classList.toggle('v13-badge-daily',isDailySeed(state.seed))}syncKeyLabels();augmentCodex()}
+function processAchievements(snapshot){const codex=v12.getCodex?.()??{},result=evaluateAchievements(achievements,snapshot,codex);if(result.newly.length){achievements=result.state;saveAchievements(achievements);for(const id of result.newly){const a=achievementById(id);if(a)showToast(t('achievementUnlocked'),a.name[lang()]??a.name.en)}renderTools();if(modal?.dataset.kind==='achievements')renderAchievements()}else achievements=result.state}
+function processDaily(snapshot){if(!isDailySeed(snapshot?.seed)||snapshot?.mode!=='ending'||!snapshot?.endingTitle||snapshot.endingTitle==='THE HEART WAITS')return;const key=`${snapshot.seed}|${snapshot.endingTitle}|${snapshot.steps}`;if(key===lastDailyRecordKey)return;lastDailyRecordKey=key;const result=recordDaily(snapshot);showToast(result.changed?t('dailyBest'):t('dailyComplete'),`${t('score')}: ${result.record?.score??calculateDailyScore(snapshot)}`);if(modal?.dataset.kind==='daily')renderDaily()}
+
+const CORE_PRIMARY=new Set(Object.values(DEFAULT_BINDINGS))
+document.addEventListener('keydown',event=>{
+ const target=event.target,tag=target?.tagName?.toLowerCase();if(tag==='input'||tag==='textarea'||tag==='select'||target?.isContentEditable)return
+ if(event.key==='Escape'&&modal){event.preventDefault();event.stopImmediatePropagation();closeModal();return}
+ if(listening){event.preventDefault();event.stopImmediatePropagation();if(['ShiftLeft','ShiftRight','ControlLeft','ControlRight','AltLeft','AltRight','MetaLeft','MetaRight','Escape'].includes(event.code))return;rebind(listening,event.code);return}
+ const mapped=Object.entries(settings.bindings).find(([,code])=>code===event.code)?.[0]
+ if(modal&&(mapped||CORE_PRIMARY.has(event.code))){event.preventDefault();event.stopImmediatePropagation();return}
+ if(event.ctrlKey||event.metaKey||event.altKey)return
+ if(mapped||CORE_PRIMARY.has(event.code)){event.preventDefault();event.stopImmediatePropagation();if(mapped)api.send(mapped)}
+},true)
+
+document.addEventListener('click',event=>{
+ if(event.target.closest?.('[data-lang]'))setTimeout(()=>{renderTools();renderModal()},0)
+ const bind=event.target.closest?.('[data-bind]');if(bind){listening=bind.dataset.bind;renderSettings();return}
+ const btn=event.target.closest?.('[data-v13]');if(!btn)return;const action=btn.dataset.v13
+ if(action==='settings')openModal('settings');else if(action==='daily')openModal('daily');else if(action==='achievements')openModal('achievements');else if(action==='close')closeModal();else if(action==='copy-daily')copyDaily();else if(action==='start-daily')startDaily();else if(action==='reset-settings'){settings=resetSettings();applySettings();renderSettings();showToast(t('settingsSaved'))}else if(action==='fullscreen'){if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.();setTimeout(renderSettings,80)}
+})
+document.addEventListener('input',event=>{const input=event.target.closest?.('[data-v13-range]');if(!input)return;const key=input.dataset.v13Range;settings={...settings,[key]:Number(input.value)};applySettings();const strong=input.parentElement?.querySelector('strong');if(strong)strong.textContent=`${Math.round(Number(input.value)*100)}%`})
+
+let syncQueued=false;const observer=new MutationObserver(()=>{if(syncQueued)return;syncQueued=true;queueMicrotask(()=>{syncQueued=false;syncDecorations()})});observer.observe(root,{childList:true,subtree:true})
+const game=api.getGame?.();game?.events?.on?.('snapshot',snapshot=>{applySettings();processAchievements(snapshot);processDaily(snapshot);renderTools()})
+settings=loadSettings();achievements=loadAchievements();applySettings();processAchievements(api.getState?.()??{});renderTools()
+window.__abyssalV13={getSettings:()=>structuredClone(settings),getAchievements:()=>structuredClone(achievements),dailySeed,calculateDailyScore,openSettings:()=>openModal('settings'),openDaily:()=>openModal('daily'),openAchievements:()=>openModal('achievements')}

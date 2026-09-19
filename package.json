@@ -1,7 +1,7 @@
 {
   "name": "abyssal-descent",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.3.0",
   "type": "module",
   "scripts": {
     "dev": "node scripts/serve-static.cjs docs 5173",
@@ -9,15 +9,17 @@
     "preview": "node scripts/serve-static.cjs dist 4173",
     "typecheck": "tsc -b --pretty false",
     "validate": "node scripts/validate.cjs",
-    "check": "npm run test && npm run static-check && npm run runtime-smoke && npm run build",
+    "check": "npm run test && npm run static-check && npm run runtime-smoke && npm run v13-runtime && npm run build",
     "balance": "node scripts/balance.cjs",
     "ui-regression": "node scripts/ui-regression.cjs",
-    "test": "npm run validate && npm run balance && npm run ui-regression && npm run i18n-check",
+    "test": "npm run validate && npm run balance && npm run ui-regression && npm run i18n-check && npm run v13-check",
     "build:source": "tsc -b && vite build",
     "static-check": "node scripts/static-check.cjs",
     "runtime-smoke": "node scripts/standalone-runtime.cjs",
     "dev:source": "vite --open /source.html",
-    "i18n-check": "node scripts/i18n-check.cjs"
+    "i18n-check": "node scripts/i18n-check.cjs",
+    "v13-check": "node scripts/v13-check.cjs",
+    "v13-runtime": "node scripts/v13-runtime.cjs"
   },
   "dependencies": {
     "phaser": "3.90.0",

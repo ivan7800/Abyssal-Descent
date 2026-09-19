@@ -5,6 +5,10 @@ export class AbyssAudio {
   private master: GainNode | null = null
   private drone: OscillatorNode | null = null
   private droneGain: GainNode | null = null
+  private sfxMaster: GainNode | null = null
+  private ambienceMaster: GainNode | null = null
+  private sfxVolume = .85
+  private ambienceVolume = .7
   enabled = true
 
   private ensure() {
@@ -16,6 +20,12 @@ export class AbyssAudio {
         this.ctx = new AudioContextCtor()
         this.master = this.ctx.createGain()
         this.master.gain.value = .17
+        this.sfxMaster = this.ctx.createGain()
+        this.ambienceMaster = this.ctx.createGain()
+        this.sfxMaster.gain.value = this.sfxVolume
+        this.ambienceMaster.gain.value = this.ambienceVolume
+        this.sfxMaster.connect(this.master)
+        this.ambienceMaster.connect(this.master)
         this.master.connect(this.ctx.destination)
       }
       if (this.ctx.state === 'suspended') void this.ctx.resume().catch(() => undefined)
@@ -26,6 +36,13 @@ export class AbyssAudio {
       this.stopDrone()
       return null
     }
+  }
+
+  setVolumes(sfx: number, ambience: number) {
+    this.sfxVolume = Math.max(0, Math.min(1, Number(sfx) || 0))
+    this.ambienceVolume = Math.max(0, Math.min(1, Number(ambience) || 0))
+    if (this.sfxMaster) this.sfxMaster.gain.value = this.sfxVolume
+    if (this.ambienceMaster) this.ambienceMaster.gain.value = this.ambienceVolume
   }
 
   setEnabled(enabled: boolean) {
@@ -41,7 +58,7 @@ export class AbyssAudio {
     osc.type = floor >= 3 ? 'sawtooth' : 'sine'
     osc.frequency.value = 38 + floor * 7
     gain.gain.value = .028
-    osc.connect(gain); gain.connect(this.master)
+    osc.connect(gain); gain.connect(this.ambienceMaster ?? this.master)
     osc.start()
     this.drone = osc; this.droneGain = gain
   }
@@ -70,7 +87,7 @@ export class AbyssAudio {
     if (cue === 'hurt' || cue === 'sanity') osc.frequency.exponentialRampToValueAtTime(Math.max(20, freq * .45), now + duration)
     gain.gain.setValueAtTime(volume * intensity, now)
     gain.gain.exponentialRampToValueAtTime(.0001, now + duration)
-    osc.connect(gain); gain.connect(this.master)
+    osc.connect(gain); gain.connect(this.sfxMaster ?? this.master)
     osc.start(now); osc.stop(now + duration + .02)
   }
 }
