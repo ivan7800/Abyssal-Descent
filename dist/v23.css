@@ -1,0 +1,36 @@
+:root{--c64-bg:#40318d;--c64-panel:#18104f;--c64-cyan:#67b6bd;--c64-blue:#7869c4;--c64-white:#fff;--c64-yellow:#bfce72;--c64-grey:#9f9f9f}
+body.c64-mode{background:#18104f;color:var(--c64-cyan);font-family:"Courier New",monospace;text-rendering:geometricPrecision}
+body.c64-mode *{border-radius:0!important}
+body.c64-mode .shell{width:min(1500px,calc(100% - 16px))}
+body.c64-mode header{background:var(--c64-bg);border:4px solid var(--c64-blue);box-shadow:none;min-height:54px;padding:6px 12px}
+body.c64-mode header h1{font:700 26px/1 "Courier New",monospace;letter-spacing:.04em;color:#fff;text-shadow:2px 2px #000}
+body.c64-mode .game-grid{grid-template-columns:minmax(0,2fr) minmax(300px,.7fr);gap:10px}
+body.c64-mode .viewport-card,body.c64-mode .panel,body.c64-mode .start-panel{background:#100a43;border:4px solid var(--c64-blue);box-shadow:6px 6px 0 #000;padding:8px}
+body.c64-mode .viewport-card:before,body.c64-mode .panel:before,body.c64-mode .panel:after{display:none}
+body.c64-mode .game{border:4px solid var(--c64-cyan);background:#000;box-shadow:none;image-rendering:pixelated}
+body.c64-mode .game canvas{image-rendering:pixelated!important;filter:none!important}
+body.c64-mode button,body.c64-mode input{font:700 13px "Courier New",monospace;border:2px solid var(--c64-cyan);background:#18104f;color:#fff;box-shadow:none;text-transform:uppercase;letter-spacing:.04em}
+body.c64-mode button:hover,body.c64-mode button:focus-visible{background:var(--c64-cyan);color:#18104f;transform:none;outline:2px solid #fff;outline-offset:1px}
+body.c64-mode .controls{gap:5px;padding-top:7px}
+body.c64-mode .controls button{min-height:42px}
+body.c64-mode .controls .interact{background:#574200;color:var(--c64-yellow);border-color:var(--c64-yellow)}
+body.c64-mode h2,body.c64-mode h3,body.c64-mode strong{color:#fff;font-family:"Courier New",monospace}
+body.c64-mode .panel-title{border-bottom:2px dashed #7869c4;padding-bottom:5px;margin-bottom:7px}
+body.c64-mode .meter{height:10px;border:2px solid #fff;background:#000}
+body.c64-mode .meter>i{image-rendering:pixelated}
+body.c64-mode .item{background:#18104f;border:2px solid #7869c4}
+body.c64-mode .enemy-panel{background:#38104f;border-color:#b86962}
+body.c64-mode .v14-home{background:#40318d!important;color:#fff}
+body.c64-mode .v14-home:before{display:none!important}
+body.c64-mode .v14-home-inner{grid-template-columns:1fr minmax(320px,.7fr);gap:32px}
+body.c64-mode .v14-brand h1 span,body.c64-mode .v14-brand h1 strong{font-family:"Courier New",monospace!important;color:#fff!important;text-shadow:4px 4px #000!important;letter-spacing:-.06em}
+body.c64-mode .v14-brand p{color:#67b6bd}
+body.c64-mode .v14-home-actions{background:#18104f;border:4px solid #7869c4;box-shadow:8px 8px 0 #000}
+body.c64-mode .v14-home-actions button{background:#18104f;border:2px solid #67b6bd;color:#fff;min-height:52px}
+body.c64-mode .v14-home-actions button:hover{background:#67b6bd;color:#18104f;transform:none}
+body.c64-mode .v14-home-actions .primary{background:#574200;border-color:#bfce72;color:#bfce72}
+body.c64-mode .v14-kicker,body.c64-mode .v14-whisper{color:#bfce72}
+body.c64-mode .v14-stage{background:#18104fef;backdrop-filter:none}
+body.c64-mode .v14-stage-card{background:#40318d;border:4px solid #67b6bd;box-shadow:8px 8px 0 #000}
+body.c64-mode .v14-stage-card h2{font-family:"Courier New",monospace;color:#fff}
+@media(max-width:820px){body.c64-mode .game-grid,body.c64-mode .v14-home-inner{grid-template-columns:1fr}.shell{width:calc(100% - 8px)!important}body.c64-mode .viewport-card{position:relative;top:auto}}

@@ -1,21 +1,6 @@
-const VERSION='abyssal-descent-v2.2.0-r1'
-const CORE=[
-  './','./index.html','./bootstrap.js','./styles.css','./v12.css','./v13.css','./v14.css','./v20.css','./v21.css','./v22.css','./main.js','./v12.js','./v13.js','./v14.js','./v15-renderer.js','./v20-premium.js','./v21-art.js','./v22-art.js','./v22-art.js.gz','./v13-meta.js','./phaser-lite.js','./manifest.webmanifest',
-  './icons/icon-192.png','./icons/icon-512.png','./assets/abyssal-crest.svg','./assets/flourish.svg','./assets/noise.svg','./assets/rune-divider.svg',
-  './game/DungeonScene.js','./game/audio.js','./game/content.js','./game/generator.js','./game/types.js',
-  './i18n.js','./meta.js','./i18n/ui.js','./i18n/actors.js','./i18n/items.js','./i18n/world.js','./i18n/fixed-a.js','./i18n/fixed-b.js'
-]
+const VERSION='abyssal-descent-v2.3.0-r1'
+const CORE=['./','./index.html','./bootstrap.js','./styles.css','./v12.css','./v13.css','./v14.css','./v23.css','./main.js','./v12.js','./v13.js','./v14.js','./v23-c64.js','./v13-meta.js','./phaser-lite.js','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./game/DungeonScene.js','./game/audio.js','./game/content.js','./game/generator.js','./game/types.js','./i18n.js','./meta.js','./i18n/ui.js','./i18n/actors.js','./i18n/items.js','./i18n/world.js','./i18n/fixed-a.js','./i18n/fixed-b.js']
 const cachePut=async(req,res)=>{if(res?.ok){const c=await caches.open(VERSION);await c.put(req,res.clone())}return res}
-self.addEventListener('install',event=>event.waitUntil(caches.open(VERSION).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())))
-self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==VERSION).map(k=>caches.delete(k)))).then(()=>self.clients.claim())))
-self.addEventListener('fetch',event=>{
-  if(event.request.method!=='GET')return
-  const url=new URL(event.request.url)
-  if(url.origin!==location.origin)return
-  const codeAsset=/\.(?:js|css|html|webmanifest|gz)$/i.test(url.pathname)
-  if(event.request.mode==='navigate'||codeAsset){
-    event.respondWith(fetch(event.request).then(r=>cachePut(event.request,r)).catch(()=>caches.match(event.request).then(r=>r||caches.match('./index.html'))))
-    return
-  }
-  event.respondWith(caches.match(event.request).then(cached=>cached||fetch(event.request).then(r=>cachePut(event.request,r))))
-})
+self.addEventListener('install',e=>e.waitUntil(caches.open(VERSION).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())))
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==VERSION).map(k=>caches.delete(k)))).then(()=>self.clients.claim())))
+self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;const u=new URL(e.request.url);if(u.origin!==location.origin)return;const code=/\.(?:js|css|html|webmanifest)$/i.test(u.pathname);if(e.request.mode==='navigate'||code){e.respondWith(fetch(e.request).then(r=>cachePut(e.request,r)).catch(()=>caches.match(e.request).then(r=>r||caches.match('./index.html'))));return}e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(x=>cachePut(e.request,x))))})
