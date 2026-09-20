@@ -1,14 +1,14 @@
 {
-  "name": "Abyssal Descent",
-  "short_name": "Abyssal",
+  "name": "Abyssal Descent — Premium Edition",
+  "short_name": "Abyssal Descent",
   "description": "A bilingual cosmic-horror dungeon crawler with Daily Descent, persistent Codex, achievements and offline play.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#040604",
-  "theme_color": "#070a08",
+  "background_color": "#030201",
+  "theme_color": "#0b0805",
   "categories": [
     "games",
     "entertainment"
