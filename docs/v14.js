@@ -9,8 +9,8 @@ let v13=window.__abyssalV13
 if(!v13)v13=await new Promise((resolve,reject)=>{let tries=0;const poll=()=>{if(window.__abyssalV13)return resolve(window.__abyssalV13);if(++tries>300)return reject(new Error('Abyssal v1.4 layer could not find the v1.3 runtime'));setTimeout(poll,5)};poll()})
 
 const TEXT={
- en:{subtitle:'A cosmic-horror expedition beneath a drowned observatory.',resume:'Resume expedition',newRun:'New expedition',daily:'Daily Descent',codex:'Codex',achievements:'Achievements',settings:'Options',install:'Installable · Offline ready',meta:'Your discoveries persist between expeditions.',codexProgress:'Codex',achievementProgress:'Achievements',dailyBest:'Daily best',noDaily:'No score today',act:'Act',guardian:'Guardian encountered',phase:'Phase',dailyResult:'Daily Descent complete',score:'Score',steps:'Steps',damage:'Damage taken',secrets:'Secrets',newBest:'New personal best',previousBest:'Previous best',continue:'Continue',back:'Back to title',beginProfile:'Choose your expedition profile',pressAny:'Descend carefully. The abyss remembers.',presentation:'AUDITED · v1.4.3',language:'Language'},
- es:{subtitle:'Una expedición de horror cósmico bajo un observatorio anegado.',resume:'Continuar expedición',newRun:'Nueva expedición',daily:'Descenso diario',codex:'Códice',achievements:'Logros',settings:'Opciones',install:'Instalable · Disponible sin conexión',meta:'Tus descubrimientos persisten entre expediciones.',codexProgress:'Códice',achievementProgress:'Logros',dailyBest:'Mejor Daily',noDaily:'Sin puntuación hoy',act:'Acto',guardian:'Guardián encontrado',phase:'Fase',dailyResult:'Descenso diario completado',score:'Puntuación',steps:'Pasos',damage:'Daño recibido',secrets:'Secretos',newBest:'Nuevo récord personal',previousBest:'Récord anterior',continue:'Continuar',back:'Volver al inicio',beginProfile:'Elige tu perfil de expedición',pressAny:'Desciende con cuidado. El abismo recuerda.',presentation:'AUDITADA · v1.4.3',language:'Idioma'}
+ en:{subtitle:'A cosmic-horror expedition beneath a drowned observatory.',resume:'Resume expedition',newRun:'New expedition',daily:'Daily Descent',codex:'Codex',achievements:'Achievements',settings:'Options',install:'Installable · Offline ready',meta:'Your discoveries persist between expeditions.',codexProgress:'Codex',achievementProgress:'Achievements',dailyBest:'Daily best',noDaily:'No score today',act:'Act',guardian:'Guardian encountered',phase:'Phase',dailyResult:'Daily Descent complete',score:'Score',steps:'Steps',damage:'Damage taken',secrets:'Secrets',newBest:'New personal best',previousBest:'Previous best',continue:'Continue',back:'Back to title',beginProfile:'Choose your expedition profile',pressAny:'Descend carefully. The abyss remembers.',presentation:'AUDITED · v1.4.4',language:'Language'},
+ es:{subtitle:'Una expedición de horror cósmico bajo un observatorio anegado.',resume:'Continuar expedición',newRun:'Nueva expedición',daily:'Descenso diario',codex:'Códice',achievements:'Logros',settings:'Opciones',install:'Instalable · Disponible sin conexión',meta:'Tus descubrimientos persisten entre expediciones.',codexProgress:'Códice',achievementProgress:'Logros',dailyBest:'Mejor Daily',noDaily:'Sin puntuación hoy',act:'Acto',guardian:'Guardián encontrado',phase:'Fase',dailyResult:'Descenso diario completado',score:'Puntuación',steps:'Pasos',damage:'Daño recibido',secrets:'Secretos',newBest:'Nuevo récord personal',previousBest:'Récord anterior',continue:'Continuar',back:'Volver al inicio',beginProfile:'Elige tu perfil de expedición',pressAny:'Desciende con cuidado. El abismo recuerda.',presentation:'AUDITADA · v1.4.4',language:'Idioma'}
 }
 const lang=()=>api.getLanguage?.()||'en',t=k=>(TEXT[lang()]??TEXT.en)[k]??k,esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),tr=v=>translateText(String(v??''),lang())
 const roman=n=>['I','II','III','IV'][Math.max(0,Math.min(3,(Number(n)||1)-1))]
@@ -22,11 +22,22 @@ let heroVisible=true,stageTimer=null,previous=api.getState?.()??{},lastBossKey='
 function codexProgress(){const c=v12.getCodex?.()??{},got=(c.enemies?.length||0)+(c.items?.length||0)+(c.floors?.length||0)+(c.endings?.length||0)+(c.secrets?.length||0),total=14+26+4+5+8;return Math.round(got/total*100)}
 function achievementProgress(){return v13.getAchievements?.().unlocked?.length||0}
 function todayBest(){const key=dailySeed().slice('ABYSS-DAILY-'.length),r=loadDaily()[key];return r?.score??null}
-function setBadge(){const badge=document.getElementById('badge');if(badge){badge.textContent='FINAL · v1.4.3';badge.classList.toggle('v13-badge-daily',isDailySeed(api.getState?.().seed))}}
-function setHero(show){heroVisible=!!show;renderHome();syncProfileBack();setBadge()}
+function setBadge(){const badge=document.getElementById('badge');if(badge){badge.textContent='FINAL · v1.4.4';badge.classList.toggle('v13-badge-daily',isDailySeed(api.getState?.().seed))}}
+function applyHeroVisibility(show){
+ heroVisible=!!show
+ home.hidden=!heroVisible
+ home.style.display=heroVisible?'grid':'none'
+ home.style.pointerEvents=heroVisible?'auto':'none'
+ home.setAttribute('aria-hidden',heroVisible?'false':'true')
+}
+function setHero(show){
+ applyHeroVisibility(show)
+ if(heroVisible)renderHome()
+ syncProfileBack();setBadge()
+}
 function renderHome(){
  const s=api.getState?.()??{},show=s.mode==='title'&&heroVisible
- home.hidden=!show
+ applyHeroVisibility(show)
  if(!show)return
  const best=todayBest(),codex=codexProgress(),ach=achievementProgress(),hasSave=!!s.hasSave
  setBadge()
@@ -69,4 +80,4 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&api.getStat
 const game=api.getGame?.();game?.events?.on?.('snapshot',processSnapshot)
 setBadge()
 renderHome();syncProfileBack();setBadge()
-window.__abyssalV14={showHome:()=>setHero(true),newExpedition:()=>setHero(false),showAct:()=>showAct(api.getState()),showBoss:()=>showBoss(api.getState()),route:openFromHome,version:'1.4.3'}
+window.__abyssalV14={showHome:()=>setHero(true),newExpedition:()=>setHero(false),showAct:()=>showAct(api.getState()),showBoss:()=>showBoss(api.getState()),route:openFromHome,version:'1.4.4'}
