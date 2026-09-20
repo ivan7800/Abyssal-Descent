@@ -1,55 +1,23 @@
-# Release Audit — Abyssal Descent v1.0.1
+# Abyssal Descent v1.4.2 — Button / Runtime Corrective Audit
 
-## Black-screen root cause
+## Root causes found
 
-The v1.0.0 archive shipped the development Vite entry at repository root:
+1. **Independent module startup race.** `main.js`, `v12.js`, `v13.js` and `v14.js` were loaded as separate module scripts. Extension layers used polling windows of only about 1–1.5 seconds. On a slow GitHub Pages/mobile/cold-cache load a layer could time out before its dependency initialized, so its listeners were never registered while the base UI still appeared.
+2. **Stale Service Worker code mixing.** JavaScript/CSS used cache-first delivery. After an update, HTML could be fresh while listeners and presentation code came from an older cache.
+3. **Overlay stacking collision.** The v1.4 title overlay and v1.2 Codex both used `z-index:1000`; their effective clickability depended on paint/insertion order.
+4. **Fullscreen close race.** Fullscreen scheduled `renderSettings()` after 80 ms. Closing Options before that callback ran left `modal === null`, causing a real console `TypeError`.
 
-```html
-<script type="module" src="/src/main.tsx"></script>
-```
+## Corrections
 
-That entry is valid when Vite serves/transforms it or when `vite build` produces `dist/`. It is **not a deployable static GitHub Pages entry by itself**. When Pages was set to **Deploy from branch → main / (root)**, the browser received raw TSX/TypeScript instead of a production bundle. The CSS background still loaded, producing the reported black screen.
+- Added `bootstrap.js` and changed production to a single versioned module entry. It imports core → v1.2 → v1.3 → v1.4 sequentially and shows a visible bootstrap error if a layer fails.
+- Added release-aware stale-worker/cache cleanup before the v1.4.2 bootstrap and versioned CSS/bootstrap URLs.
+- Changed the v1.4.2 Service Worker to network-first for navigation and code assets, with cache fallback for offline use.
+- Rotated cache to `abyssal-descent-v1.4.2-r1`.
+- Made stacking explicit: title 900, Codex 1200, options/daily/achievements 1300, cinematic stage 1400, achievement toast 1500.
+- Guarded the delayed fullscreen refresh so it only renders while the settings modal still exists.
+- Added runtime tests for v1.2 buttons and expanded v1.3/v1.4 click-route tests.
+- Added a release button matrix that exercises 48 individual actions.
 
-This was a release-packaging defect: the previous automated game tests did not exercise the exact static artifact served by the alternative Pages configuration.
+## Result
 
-## Correction
-
-v1.0.1 adds a separate, audited production surface under `docs/`:
-
-- no runtime third-party dependency;
-- no CDN dependency;
-- no TypeScript/TSX in the browser path;
-- relative asset URLs safe under a GitHub repository subpath;
-- native canvas rendering compatibility layer for the existing scene API;
-- production UI preserving every existing button/action/content system;
-- visible boot/runtime error fallback instead of silent black output;
-- root redirect for Pages deployments that publish `/ (root)`;
-- deterministic `dist/` builder used by GitHub Actions.
-
-The React + Phaser source tree remains intact for development. No game feature or campaign content was removed to make deployment work.
-
-## Release checks executed
-
-```text
-npm test
-npm run static-check
-npm run runtime-smoke
-npm run build
-npm run check
-```
-
-Results:
-
-- content integrity: PASS — 14 enemies, 26 items, 3 archetypes;
-- procedural generation: PASS — 4,000 / 4,000 floors;
-- deterministic boss balance gate: PASS;
-- UI/campaign contracts: PASS — 25 button templates and four-act progression;
-- standalone static assets/parity: PASS;
-- standalone production boot: PASS;
-- production expedition start: PASS;
-- standalone canvas renderer: PASS (`379` draw operations in the smoke run);
-- production `dist/` creation: PASS.
-
-## Browser-host limitation
-
-The container's managed Chromium blocks both localhost and `file:` navigation by organization policy, so a visual Chromium screenshot could not be obtained here. To avoid treating that as success, the release includes a production-runtime smoke harness that boots the exact standalone `DungeonScene` and canvas compatibility layer against a simulated DOM/canvas and starts a real Surveyor expedition. This runtime test passes.
+`npm run check` passes end-to-end. Procedural generation remains 4000/4000 valid and boss balance/campaign content are unchanged.
