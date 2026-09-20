@@ -1,4 +1,4 @@
-const RELEASE='1.4.2'
+const RELEASE='1.4.3'
 const RELEASE_KEY='abyssal-descent-release-session'
 async function clearStaleWorker(){
   try{
@@ -17,13 +17,13 @@ function fatal(error){
 }
 try{
   if(!(await clearStaleWorker())){
-    await import('./main.js?v=1.4.2')
+    await import('./main.js?v=1.4.3')
     if(!window.__abyssal)throw new Error('Core runtime did not initialize')
-    await import('./v12.js?v=1.4.2')
+    await import('./v12.js?v=1.4.3')
     if(!window.__abyssalV12)throw new Error('PWA/Codex layer did not initialize')
-    await import('./v13.js?v=1.4.2')
+    await import('./v13.js?v=1.4.3')
     if(!window.__abyssalV13)throw new Error('Daily/Options layer did not initialize')
-    await import('./v14.js?v=1.4.2')
+    await import('./v14.js?v=1.4.3')
     if(!window.__abyssalV14)throw new Error('Presentation layer did not initialize')
   }
 }catch(error){console.error('[Abyssal bootstrap]',error);fatal(error)}
