@@ -1,0 +1,68 @@
+:root{--v22-gold:#c7aa73;--v22-gold2:#8d6d3f;--v22-ivory:#e7decb;--v22-muted:#887f70;--v22-panel:#090806e9;--v22-line:#4a3925;--v22-blood:#8e322c}
+body.v22-premium{background:
+ radial-gradient(circle at 50% -18%,#312416 0,#0b0805 30%,#020202 66%),
+ #020202;color:var(--v22-ivory)}
+body.v22-premium:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;background:linear-gradient(#0006 0 1px,transparent 1px 3px);background-size:100% 3px;opacity:.04;mix-blend-mode:screen}
+body.v22-premium .shell{width:min(1640px,calc(100% - 22px));padding:8px 0 34px}
+body.v22-premium header{min-height:64px;border-bottom-color:#443420;background:linear-gradient(90deg,transparent,#0e0b07aa 18% 82%,transparent)}
+body.v22-premium header:before{content:"";position:absolute;left:50%;top:3px;transform:translateX(-50%);width:64px;height:64px;background:url("./assets/abyssal-crest.svg") center/contain no-repeat;opacity:.08;filter:sepia(1) saturate(.4)}
+body.v22-premium header h1{font-size:clamp(1.9rem,2.7vw,3.05rem);letter-spacing:.105em;color:#f0e4ce;text-shadow:0 3px 0 #000,0 0 32px #be8d4022}
+body.v22-premium .game-grid{grid-template-columns:minmax(0,2.12fr) minmax(320px,.68fr);gap:16px}
+body.v22-premium .viewport-card{top:6px;padding:8px;border-color:#705735;background:linear-gradient(160deg,#090705,#020202 56%);box-shadow:0 34px 120px #000f,inset 0 0 0 1px #1e160d,0 0 42px #8c632210}
+body.v22-premium .viewport-card:before{inset:2px;border-color:#d0a76626;background:linear-gradient(90deg,#b88b3e0c 1px,transparent 1px) 0 0/23px 100%;box-shadow:inset 0 0 96px #000c}
+body.v22-premium .game{border-color:#3c2d1c;box-shadow:inset 0 0 110px #000c,0 0 0 1px #000,0 24px 70px #000c;transform:translateZ(0)}
+body.v22-premium .game canvas.abyssal-canvas{filter:saturate(1.06) contrast(1.09) brightness(1.03)}
+body.v22-premium .controls{grid-template-columns:repeat(4,minmax(84px,1fr)) minmax(170px,1.55fr);gap:6px;padding-top:9px}
+body.v22-premium .controls button{min-height:49px;border-color:#4b3823;background:linear-gradient(180deg,#17110b,#080604);color:#b9aa91;box-shadow:inset 0 1px #ffffff05,0 4px 12px #0007;font-size:.69rem}
+body.v22-premium .controls button:hover{border-color:#a57f49;background:linear-gradient(180deg,#21170d,#0d0804);color:#f0d9ad;box-shadow:inset 0 0 24px #bb863412,0 6px 20px #0009}
+body.v22-premium .controls .interact{border-color:#8c6937;background:linear-gradient(180deg,#2b1c0c,#100a05);color:#e2c58f;text-shadow:0 0 18px #c48a3455}
+body.v22-premium aside{gap:9px}
+body.v22-premium .panel,body.v22-premium .start-panel{border-color:#3b3023;background:linear-gradient(145deg,#0f0c08f2,#060504f7 68%),url("./assets/noise.svg");box-shadow:0 16px 44px #0009,inset 0 1px #ffffff05}
+body.v22-premium .panel{padding:14px 14px 13px}
+body.v22-premium .panel:before{border-color:#c49a4b12}
+body.v22-premium .panel:after{background:linear-gradient(90deg,#ba8d475c,transparent 82%)}
+body.v22-premium .panel-title h2{font-size:1rem;letter-spacing:.105em;color:#e4d5bb}
+body.v22-premium .objective-panel{background:linear-gradient(145deg,#191108f4,#080604f7);border-color:#6c4e28}
+body.v22-premium .objective-panel .objective{font-size:.9rem!important;line-height:1.62!important}
+body.v22-premium .meter{height:8px;border-color:#3a2d20;background:#020202}
+body.v22-premium .enemy-panel.v22-threat{border-color:#744433;box-shadow:inset 0 0 90px #71160d18,0 15px 52px #000a,0 0 24px #6f271418}
+body.v22-premium .enemy-panel.boss-panel{border-color:#a2693e;background:radial-gradient(circle at 50% -15%,#5d251762,#0a0605 60%);box-shadow:inset 0 0 110px #7c1d1018,0 0 38px #6b291628,0 18px 52px #000b}
+body.v22-premium .enemy-panel.boss-panel:after{content:"GUARDIAN";letter-spacing:.3em;color:#d3a66d;text-shadow:0 0 16px #d06a2d66}
+body.v22-premium .combat-actions button{min-height:44px}.combat-actions .v20-attack{background:linear-gradient(#381512,#0b0605);border-color:#8e3931;color:#efb0a5}.combat-actions .v20-ability{background:linear-gradient(#34220f,#0d0804);border-color:#97713d;color:#efd09a}
+body.v22-premium .item{border-color:#3a2d20;background:linear-gradient(90deg,#100b07,#060504)}
+body.v22-premium .item:hover{border-color:#745531;background:#150e08}
+body.v22-premium .v14-home{background:
+ radial-gradient(circle at 26% 45%,#5f371a10 0,transparent 34%),
+ radial-gradient(circle at 72% 34%,#6d243010 0,transparent 30%),
+ linear-gradient(180deg,#070503,#020202 70%);}
+body.v22-premium .v14-home:before{background:
+ url("./assets/abyssal-crest.svg") center 22%/min(44vw,520px) no-repeat,
+ url("./assets/noise.svg") 0 0/180px 180px;opacity:.08;mix-blend-mode:screen}
+body.v22-premium .v14-home-inner{width:min(1120px,100%);grid-template-columns:minmax(0,1.24fr) minmax(340px,.76fr);gap:64px}
+body.v22-premium .v14-brand h1{margin:23px 0 15px;letter-spacing:-.04em}
+body.v22-premium .v14-brand h1 span{font-size:clamp(4rem,9vw,9rem);color:#b6a689;text-shadow:0 4px 0 #000,0 0 60px #b77d341b}
+body.v22-premium .v14-brand h1 strong{font-family:Georgia,serif;font-weight:500;font-size:clamp(3.7rem,8.6vw,8.5rem);color:#eee2ca;text-shadow:0 4px 0 #000,0 0 42px #c4955528}
+body.v22-premium .v14-brand p{max-width:590px;color:#968a78;font-size:1rem;line-height:1.75}
+body.v22-premium .v14-home-actions{padding:14px;border-color:#574126;background:linear-gradient(160deg,#0f0b07e8,#050403f4);box-shadow:0 28px 90px #000c,inset 0 1px #ffffff08}
+body.v22-premium .v14-home-actions button{min-height:62px;border-color:#473521;background:linear-gradient(180deg,#151009,#090604);color:#cbbca2}
+body.v22-premium .v14-home-actions button:hover{transform:translateX(4px);border-color:#9d7742;background:linear-gradient(180deg,#21170d,#0e0905);color:#f2ddba}
+body.v22-premium .v14-home-actions .primary{border-color:#a07138;background:linear-gradient(90deg,#2c1b0d,#0e0905);box-shadow:inset 3px 0 #d1a15b,0 0 28px #9f632512}
+body.v22-premium .v14-languages button[aria-pressed=true]{border-color:#9c7542;color:#ecd7b1;background:#1c1208}
+body.v22-premium .v14-kicker{color:#a47f4b;letter-spacing:.24em}
+body.v22-premium .v14-whisper{color:#756957;letter-spacing:.11em}
+body.v22-premium .v14-stage{background:#030201e8;backdrop-filter:blur(3px)}
+body.v22-premium .v14-stage-card{border-color:#9b7746;background:linear-gradient(90deg,transparent,#130d07dd,transparent);box-shadow:0 0 90px #000}
+body.v22-premium .v14-stage-card h2{color:#f1e2c8;text-shadow:0 0 42px #b87d3a30}
+body.v22-premium .v14-stage-card>span{color:#b58c56}
+body.v22-premium .v22-motion-fx{position:absolute;inset:0;z-index:7;pointer-events:none;overflow:hidden}
+body.v22-premium .v22-motion-fx.v22-step{animation:v22-step .26s ease-out}
+body.v22-premium .v22-motion-fx.v22-turn{animation:v22-turn .22s ease-out}
+body.v22-premium .v22-motion-fx.v22-slash:before{content:"";position:absolute;width:70%;height:7px;right:-15%;top:42%;background:linear-gradient(90deg,transparent,#f1d6a7dd,#fff,transparent);transform:rotate(-21deg);filter:blur(.6px);box-shadow:0 0 18px #f3c984;animation:v22-slash .26s ease-out both}
+body.v22-premium .v22-motion-fx.v22-burst:before{content:"";position:absolute;inset:12%;border:1px solid #d2aa6d88;border-radius:50%;box-shadow:0 0 55px #d38f3e55,inset 0 0 60px #8f4f2428;animation:v22-burst .36s ease-out both}
+@keyframes v22-step{0%{box-shadow:inset 0 0 0 #000}35%{box-shadow:inset 0 -28px 55px #0009}100%{box-shadow:inset 0 0 0 #000}}
+@keyframes v22-turn{0%{transform:translateX(0);filter:blur(0)}40%{transform:translateX(5px);filter:blur(.7px)}100%{transform:none;filter:none}}
+@keyframes v22-slash{0%{opacity:0;transform:translate(40px,-40px) rotate(-21deg) scaleX(.5)}28%{opacity:1}100%{opacity:0;transform:translate(-300px,150px) rotate(-21deg) scaleX(1.25)}}
+@keyframes v22-burst{0%{opacity:0;transform:scale(.45)}40%{opacity:1}100%{opacity:0;transform:scale(1.45)}}
+@media(max-width:1050px){body.v22-premium .game-grid{grid-template-columns:minmax(0,1.55fr) minmax(310px,.75fr)}body.v22-premium .controls{grid-template-columns:repeat(4,1fr)}body.v22-premium .controls .interact{grid-column:1/-1}}
+@media(max-width:820px){body.v22-premium .game-grid{grid-template-columns:1fr}body.v22-premium .viewport-card{position:relative;top:auto}body.v22-premium .v14-home-inner{grid-template-columns:1fr;gap:18px}.v14-brand{padding-top:22px}body.v22-premium .v14-home-actions{margin-top:0}}
+@media(prefers-reduced-motion:reduce){body.v22-premium .v22-motion-fx,body.v22-premium .v22-motion-fx:before{animation:none!important}}

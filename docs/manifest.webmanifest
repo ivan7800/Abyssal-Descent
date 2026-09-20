@@ -1,5 +1,5 @@
 {
-  "name": "Abyssal Descent — Dark Fantasy Edition",
+  "name": "Abyssal Descent — Premium Experience",
   "short_name": "Abyssal Descent",
   "description": "A bilingual cosmic-horror dungeon crawler with Daily Descent, persistent Codex, achievements and offline play.",
   "lang": "en",
@@ -9,9 +9,22 @@
   "orientation": "any",
   "background_color": "#030201",
   "theme_color": "#070503",
-  "categories": ["games","entertainment"],
+  "categories": [
+    "games",
+    "entertainment"
+  ],
   "icons": [
-    {"src":"./icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-    {"src":"./icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }

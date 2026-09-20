@@ -1,6 +1,6 @@
-const VERSION='abyssal-descent-v2.1.0-r1'
+const VERSION='abyssal-descent-v2.2.0-r1'
 const CORE=[
-  './','./index.html','./bootstrap.js','./styles.css','./v12.css','./v13.css','./v14.css','./v20.css','./v21.css','./main.js','./v12.js','./v13.js','./v14.js','./v15-renderer.js','./v20-premium.js','./v21-art.js','./v13-meta.js','./phaser-lite.js','./manifest.webmanifest',
+  './','./index.html','./bootstrap.js','./styles.css','./v12.css','./v13.css','./v14.css','./v20.css','./v21.css','./v22.css','./main.js','./v12.js','./v13.js','./v14.js','./v15-renderer.js','./v20-premium.js','./v21-art.js','./v22-art.js','./v22-art.js.gz','./v13-meta.js','./phaser-lite.js','./manifest.webmanifest',
   './icons/icon-192.png','./icons/icon-512.png','./assets/abyssal-crest.svg','./assets/flourish.svg','./assets/noise.svg','./assets/rune-divider.svg',
   './game/DungeonScene.js','./game/audio.js','./game/content.js','./game/generator.js','./game/types.js',
   './i18n.js','./meta.js','./i18n/ui.js','./i18n/actors.js','./i18n/items.js','./i18n/world.js','./i18n/fixed-a.js','./i18n/fixed-b.js'
@@ -12,7 +12,7 @@ self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET')return
   const url=new URL(event.request.url)
   if(url.origin!==location.origin)return
-  const codeAsset=/\.(?:js|css|html|webmanifest)$/i.test(url.pathname)
+  const codeAsset=/\.(?:js|css|html|webmanifest|gz)$/i.test(url.pathname)
   if(event.request.mode==='navigate'||codeAsset){
     event.respondWith(fetch(event.request).then(r=>cachePut(event.request,r)).catch(()=>caches.match(event.request).then(r=>r||caches.match('./index.html'))))
     return

@@ -1,4 +1,4 @@
-const RELEASE='2.1.0'
+const RELEASE='2.2.0'
 const RELEASE_KEY='abyssal-descent-release-session'
 async function clearStaleWorker(){
   try{
@@ -17,19 +17,21 @@ function fatal(error){
 }
 try{
   if(!(await clearStaleWorker())){
-    await import('./main.js?v=2.1.0')
+    await import('./main.js?v=2.2.0')
     if(!window.__abyssal)throw new Error('Core runtime did not initialize')
-    await import('./v15-renderer.js?v=2.1.0')
+    await import('./v15-renderer.js?v=2.2.0')
     if(!window.__abyssalV15)throw new Error('Dungeon renderer layer did not initialize')
-    await import('./v12.js?v=2.1.0')
+    await import('./v12.js?v=2.2.0')
     if(!window.__abyssalV12)throw new Error('PWA/Codex layer did not initialize')
-    await import('./v13.js?v=2.1.0')
+    await import('./v13.js?v=2.2.0')
     if(!window.__abyssalV13)throw new Error('Daily/Options layer did not initialize')
-    await import('./v14.js?v=2.1.0')
+    await import('./v14.js?v=2.2.0')
     if(!window.__abyssalV14)throw new Error('Presentation layer did not initialize')
-    await import('./v20-premium.js?v=2.1.0')
+    await import('./v20-premium.js?v=2.2.0')
     if(!window.__abyssalV20)throw new Error('Premium renderer/UI layer did not initialize')
-    await import('./v21-art.js?v=2.1.0')
+    await import('./v21-art.js?v=2.2.0')
     if(!window.__abyssalV21)throw new Error('Art direction layer did not initialize')
+    await import('./v22-art.js?v=2.2.0')
+    if(!window.__abyssalV22)throw new Error('Cinematic art/UI layer did not initialize')
   }
 }catch(error){console.error('[Abyssal bootstrap]',error);fatal(error)}
