@@ -61,7 +61,7 @@ export function validSaveEnvelope(v){
 }
 export function makeExportBundle(codex,language){
  const raw=safeGet(SAVE_KEY);if(!raw)return {ok:false,reason:'no-save'}
- try{const save=JSON.parse(raw);if(!validSaveEnvelope(save))return {ok:false,reason:'invalid'};return {ok:true,bundle:{format:'abyssal-descent-save',exportVersion:1,gameVersion:'1.4.1',exportedAt:new Date().toISOString(),language:language==='es'?'es':'en',save,codex:sanitizeCodex(codex)}}}catch{return {ok:false,reason:'invalid'}}
+ try{const save=JSON.parse(raw);if(!validSaveEnvelope(save))return {ok:false,reason:'invalid'};return {ok:true,bundle:{format:'abyssal-descent-save',exportVersion:1,gameVersion:'1.4.2',exportedAt:new Date().toISOString(),language:language==='es'?'es':'en',save,codex:sanitizeCodex(codex)}}}catch{return {ok:false,reason:'invalid'}}
 }
 export function parseImport(text,currentCodex){
  try{const parsed=typeof text==='string'?JSON.parse(text):text;const save=parsed?.format==='abyssal-descent-save'?parsed.save:parsed;if(!validSaveEnvelope(save))return {ok:false,reason:'invalid'};const incoming=parsed?.format==='abyssal-descent-save'?sanitizeCodex(parsed.codex):freshCodex();return {ok:true,save,saveText:JSON.stringify(save),codex:mergeCodex(currentCodex,incoming),language:parsed?.language==='es'||parsed?.language==='en'?parsed.language:null}}catch{return {ok:false,reason:'invalid'}}
