@@ -17,7 +17,7 @@ export function sanitizeCodex(value){
  const enemies=strings(value.enemies)?uniq(value.enemies.filter(id=>id in ENEMY_DEFS)):[]
  const items=strings(value.items)?uniq(value.items.filter(id=>id in ITEM_DEFS)):[]
  const floors=Array.isArray(value.floors)?uniq(value.floors.filter(n=>Number.isInteger(n)&&n>=1&&n<=4)).sort((a,b)=>a-b):[]
- const notes=strings(value.notes)?uniq(value.notes.filter(n=>n.length<=800)):[]
+ const notes=strings(value.notes)?uniq(value.notes.filter(n=>n.length<=800)).slice(-256):[]
  const endings=strings(value.endings)?uniq(value.endings.filter(n=>ENDING_TITLES.includes(n))):[]
  const secrets=strings(value.secrets)?uniq(value.secrets.filter(n=>/^setpiece-[1-4]-[01]$/.test(n))):[]
  return {version:CODEX_VERSION,enemies,items,floors,notes,endings,secrets}
@@ -61,7 +61,7 @@ export function validSaveEnvelope(v){
 }
 export function makeExportBundle(codex,language){
  const raw=safeGet(SAVE_KEY);if(!raw)return {ok:false,reason:'no-save'}
- try{const save=JSON.parse(raw);if(!validSaveEnvelope(save))return {ok:false,reason:'invalid'};return {ok:true,bundle:{format:'abyssal-descent-save',exportVersion:1,gameVersion:'1.3.0',exportedAt:new Date().toISOString(),language:language==='es'?'es':'en',save,codex:sanitizeCodex(codex)}}}catch{return {ok:false,reason:'invalid'}}
+ try{const save=JSON.parse(raw);if(!validSaveEnvelope(save))return {ok:false,reason:'invalid'};return {ok:true,bundle:{format:'abyssal-descent-save',exportVersion:1,gameVersion:'1.4.1',exportedAt:new Date().toISOString(),language:language==='es'?'es':'en',save,codex:sanitizeCodex(codex)}}}catch{return {ok:false,reason:'invalid'}}
 }
 export function parseImport(text,currentCodex){
  try{const parsed=typeof text==='string'?JSON.parse(text):text;const save=parsed?.format==='abyssal-descent-save'?parsed.save:parsed;if(!validSaveEnvelope(save))return {ok:false,reason:'invalid'};const incoming=parsed?.format==='abyssal-descent-save'?sanitizeCodex(parsed.codex):freshCodex();return {ok:true,save,saveText:JSON.stringify(save),codex:mergeCodex(currentCodex,incoming),language:parsed?.language==='es'||parsed?.language==='en'?parsed.language:null}}catch{return {ok:false,reason:'invalid'}}

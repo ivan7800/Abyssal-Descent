@@ -25,7 +25,7 @@ export function saveSettings(settings){return safeSet(V13_SETTINGS_KEY,JSON.stri
 export function resetSettings(){const v=sanitizeSettings({});saveSettings(v);return v}
 
 export function dailySeed(date=new Date()){const iso=date.toISOString().slice(0,10);return `ABYSS-DAILY-${iso}`}
-export function dailyDateFromSeed(seed){const m=/^ABYSS-DAILY-(\d{4}-\d{2}-\d{2})$/.exec(String(seed||''));return m?.[1]??null}
+export function dailyDateFromSeed(seed){const m=/^ABYSS-DAILY-(\d{4}-\d{2}-\d{2})$/.exec(String(seed||''));if(!m)return null;const d=new Date(`${m[1]}T00:00:00.000Z`);return Number.isFinite(d.getTime())&&d.toISOString().slice(0,10)===m[1]?m[1]:null}
 export function isDailySeed(seed){return dailyDateFromSeed(seed)!==null}
 export function calculateDailyScore(snapshot){
  const s=snapshot??{},r=s.runStats??{};const completed=s.mode==='ending'&&s.endingTitle&&s.endingTitle!=='THE HEART WAITS'
@@ -37,7 +37,7 @@ export function recordDaily(snapshot){
  const date=dailyDateFromSeed(snapshot?.seed);if(!date)return {changed:false,record:null}
  const all=loadDaily(),score=calculateDailyScore(snapshot),old=isObj(all[date])?all[date]:null
  const run={date,seed:snapshot.seed,score,archetype:String(snapshot.archetype||''),endingTitle:String(snapshot.endingTitle||''),steps:Number(snapshot.steps)||0,recordedAt:new Date().toISOString()}
- const next=old&&Number(old.score)>=score?old:run;all[date]=next;safeSet(DAILY_KEY,JSON.stringify(all));return {changed:next===run,record:next}
+ const next=old&&Number(old.score)>=score?old:run;all[date]=next;safeSet(DAILY_KEY,JSON.stringify(all));return {changed:next===run,record:next,previous:old}
 }
 
 export const ACHIEVEMENTS=Object.freeze([

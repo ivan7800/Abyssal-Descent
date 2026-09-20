@@ -11,7 +11,7 @@ const TEXT={
 }
 const ACTION_LABEL={en:{forward:'Forward',back:'Back',left:'Turn left',right:'Turn right',interact:'Interact',attack:'Attack',guard:'Guard',focus:'Focus',ability:'Ability',flee:'Flee'},es:{forward:'Avanzar',back:'Retroceder',left:'Girar izquierda',right:'Girar derecha',interact:'Interactuar',attack:'Atacar',guard:'Defender',focus:'Concentrarse',ability:'Habilidad',flee:'Huir'}}
 const lang=()=>api.getLanguage?.()||'en',t=k=>(TEXT[lang()]??TEXT.en)[k]??k,esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
-let settings=loadSettings(),achievements=loadAchievements(),modal=null,listening=null,toastTimer=null,lastDailyRecordKey=''
+let settings=loadSettings(),achievements=loadAchievements(),modal=null,listening=null,toastTimer=null,lastDailyRecordKey='',lastDailyOutcome=null
 const root=document.querySelector('.shell')||document.body
 const v12Tools=document.getElementById('v12-tools')
 const tools=document.createElement('section');tools.id='v13-tools';tools.className='v13-tools';v12Tools?.insertAdjacentElement('afterend',tools)
@@ -22,7 +22,7 @@ function applySettings(){settings=sanitizeSettings(settings);document.documentEl
 function todayRecord(){return loadDaily()[dailySeed().slice('ABYSS-DAILY-'.length)]??null}
 function renderTools(){
  const state=api.getState?.()??{},daily=isDailySeed(state.seed),score=daily?calculateDailyScore(state):null,unlocked=achievements.unlocked.length
- const badge=document.getElementById('badge');if(badge){badge.textContent='FINAL · v1.3.0';badge.classList.toggle('v13-badge-daily',daily)}
+ const badge=document.getElementById('badge');if(badge){if(!window.__abyssalV14)badge.textContent='FINAL · v1.3.0';badge.classList.toggle('v13-badge-daily',daily)}
  tools.innerHTML=`${daily?`<span class="daily-mark">${esc(t('dailyActive'))} · ${esc(state.seed)} · ${esc(t('currentScore'))} ${score}</span>`:`<span class="daily-mark">v1.3 · ${esc(t('arrowHint'))}</span>`}<button data-v13="settings">${esc(t('settings'))}</button><button data-v13="daily">${esc(t('daily'))}</button><button data-v13="achievements">${esc(t('achievements'))} <span>${unlocked}/${ACHIEVEMENTS.length}</span></button>`
  syncKeyLabels();augmentCodex()
 }
@@ -51,9 +51,9 @@ function syncKeyLabels(){
  if(ability){const next=ability.textContent.replace(/^.*? · /,`${codeLabel(settings.bindings.ability,lang())} · `);if(next!==ability.textContent)ability.textContent=next}
  if(interact&&interact.textContent.includes(' · ')){const next=interact.textContent.replace(/^.*? · /,`${codeLabel(settings.bindings.interact,lang())} · `);if(next!==interact.textContent)interact.textContent=next}
 }
-function syncDecorations(){const badge=document.getElementById('badge'),state=api.getState?.()??{};if(badge){if(badge.textContent!=='FINAL · v1.3.0')badge.textContent='FINAL · v1.3.0';badge.classList.toggle('v13-badge-daily',isDailySeed(state.seed))}syncKeyLabels();augmentCodex()}
+function syncDecorations(){const badge=document.getElementById('badge'),state=api.getState?.()??{};if(badge){if(!window.__abyssalV14&&badge.textContent!=='FINAL · v1.3.0')badge.textContent='FINAL · v1.3.0';badge.classList.toggle('v13-badge-daily',isDailySeed(state.seed))}syncKeyLabels();augmentCodex()}
 function processAchievements(snapshot){const codex=v12.getCodex?.()??{},result=evaluateAchievements(achievements,snapshot,codex);if(result.newly.length){achievements=result.state;saveAchievements(achievements);for(const id of result.newly){const a=achievementById(id);if(a)showToast(t('achievementUnlocked'),a.name[lang()]??a.name.en)}renderTools();if(modal?.dataset.kind==='achievements')renderAchievements()}else achievements=result.state}
-function processDaily(snapshot){if(!isDailySeed(snapshot?.seed)||snapshot?.mode!=='ending'||!snapshot?.endingTitle||snapshot.endingTitle==='THE HEART WAITS')return;const key=`${snapshot.seed}|${snapshot.endingTitle}|${snapshot.steps}`;if(key===lastDailyRecordKey)return;lastDailyRecordKey=key;const result=recordDaily(snapshot);showToast(result.changed?t('dailyBest'):t('dailyComplete'),`${t('score')}: ${result.record?.score??calculateDailyScore(snapshot)}`);if(modal?.dataset.kind==='daily')renderDaily()}
+function processDaily(snapshot){if(!isDailySeed(snapshot?.seed)||snapshot?.mode!=='ending'||!snapshot?.endingTitle||snapshot.endingTitle==='THE HEART WAITS')return;const key=`${snapshot.seed}|${snapshot.endingTitle}|${snapshot.steps}`;if(key===lastDailyRecordKey)return;lastDailyRecordKey=key;const result=recordDaily(snapshot);lastDailyOutcome={key,changed:!!result.changed,score:calculateDailyScore(snapshot),previousScore:result.previous?.score??null};showToast(result.changed?t('dailyBest'):t('dailyComplete'),`${t('score')}: ${result.record?.score??lastDailyOutcome.score}`);if(modal?.dataset.kind==='daily')renderDaily()}
 
 const CORE_PRIMARY=new Set(Object.values(DEFAULT_BINDINGS))
 document.addEventListener('keydown',event=>{
@@ -70,11 +70,11 @@ document.addEventListener('click',event=>{
  if(event.target.closest?.('[data-lang]'))setTimeout(()=>{renderTools();renderModal()},0)
  const bind=event.target.closest?.('[data-bind]');if(bind){listening=bind.dataset.bind;renderSettings();return}
  const btn=event.target.closest?.('[data-v13]');if(!btn)return;const action=btn.dataset.v13
- if(action==='settings')openModal('settings');else if(action==='daily')openModal('daily');else if(action==='achievements')openModal('achievements');else if(action==='close')closeModal();else if(action==='copy-daily')copyDaily();else if(action==='start-daily')startDaily();else if(action==='reset-settings'){settings=resetSettings();applySettings();renderSettings();showToast(t('settingsSaved'))}else if(action==='fullscreen'){if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.();setTimeout(renderSettings,80)}
+ if(action==='settings')openModal('settings');else if(action==='daily')openModal('daily');else if(action==='achievements')openModal('achievements');else if(action==='close')closeModal();else if(action==='copy-daily')copyDaily();else if(action==='start-daily')startDaily();else if(action==='reset-settings'){settings=resetSettings();applySettings();renderSettings();showToast(t('settingsSaved'))}else if(action==='fullscreen'){try{const op=document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.();Promise.resolve(op).catch(()=>{}).finally(()=>setTimeout(renderSettings,80))}catch{setTimeout(renderSettings,80)}}
 })
 document.addEventListener('input',event=>{const input=event.target.closest?.('[data-v13-range]');if(!input)return;const key=input.dataset.v13Range;settings={...settings,[key]:Number(input.value)};applySettings();const strong=input.parentElement?.querySelector('strong');if(strong)strong.textContent=`${Math.round(Number(input.value)*100)}%`})
 
 let syncQueued=false;const observer=new MutationObserver(()=>{if(syncQueued)return;syncQueued=true;queueMicrotask(()=>{syncQueued=false;syncDecorations()})});observer.observe(root,{childList:true,subtree:true})
 const game=api.getGame?.();game?.events?.on?.('snapshot',snapshot=>{applySettings();processAchievements(snapshot);processDaily(snapshot);renderTools()})
 settings=loadSettings();achievements=loadAchievements();applySettings();processAchievements(api.getState?.()??{});renderTools()
-window.__abyssalV13={getSettings:()=>structuredClone(settings),getAchievements:()=>structuredClone(achievements),dailySeed,calculateDailyScore,openSettings:()=>openModal('settings'),openDaily:()=>openModal('daily'),openAchievements:()=>openModal('achievements')}
+window.__abyssalV13={getSettings:()=>structuredClone(settings),getAchievements:()=>structuredClone(achievements),getLastDailyOutcome:()=>lastDailyOutcome?structuredClone(lastDailyOutcome):null,dailySeed,calculateDailyScore,openSettings:()=>openModal('settings'),openDaily:()=>openModal('daily'),openAchievements:()=>openModal('achievements')}
