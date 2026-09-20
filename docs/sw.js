@@ -1,6 +1,6 @@
-const VERSION='abyssal-descent-v1.5.0-r1'
+const VERSION='abyssal-descent-v2.0.0-r1'
 const CORE=[
-  './','./index.html','./bootstrap.js','./styles.css','./v12.css','./v13.css','./v14.css','./main.js','./v12.js','./v13.js','./v14.js','./v15-renderer.js','./v13-meta.js','./phaser-lite.js','./manifest.webmanifest',
+  './','./index.html','./bootstrap.js','./styles.css','./v12.css','./v13.css','./v14.css','./v20.css','./main.js','./v12.js','./v13.js','./v14.js','./v15-renderer.js','./v20-premium.js','./v13-meta.js','./phaser-lite.js','./manifest.webmanifest',
   './icons/icon-192.png','./icons/icon-512.png',
   './game/DungeonScene.js','./game/audio.js','./game/content.js','./game/generator.js','./game/types.js',
   './i18n.js','./meta.js','./i18n/ui.js','./i18n/actors.js','./i18n/items.js','./i18n/world.js','./i18n/fixed-a.js','./i18n/fixed-b.js'
